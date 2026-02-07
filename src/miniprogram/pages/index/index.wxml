@@ -1,0 +1,11 @@
+<!--pages/index/index.wxml-->
+<view class="container">
+  <view class="header">
+    <text class="title">一味鲜粉店</text>
+    <text class="subtitle">特色砂锅粉 · 粥品 · 小吃</text>
+  </view>
+  
+  <view class="menu-notice">
+    系统正在搭建中，敬请期待...
+  </view>
+</view>

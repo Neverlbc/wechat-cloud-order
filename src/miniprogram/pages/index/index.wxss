@@ -1,0 +1,27 @@
+/* pages/index/index.wxss */
+.header {
+  padding: 40rpx;
+  background: #FF4D4F;
+  color: white;
+  width: 100%;
+  text-align: center;
+}
+
+.title {
+  font-size: 48rpx;
+  font-weight: bold;
+  display: block;
+}
+
+.subtitle {
+  font-size: 24rpx;
+  opacity: 0.8;
+  margin-top: 10rpx;
+  display: block;
+}
+
+.menu-notice {
+  margin-top: 200rpx;
+  color: #999;
+  font-size: 28rpx;
+}

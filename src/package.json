@@ -1,0 +1,15 @@
+{
+    "name": "wechat-cloud-order",
+    "version": "1.0.0",
+    "description": "一味鲜粉店点餐小程序",
+    "main": "app.js",
+    "dependencies": {
+        "@vant/weapp": "^1.11.6"
+    },
+    "devDependencies": {},
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "",
+    "license": "ISC"
+}
