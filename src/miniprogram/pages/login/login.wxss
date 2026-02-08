@@ -1,0 +1,317 @@
+/* pages/login/login.wxss */
+/* 一味鲜 - 登录页（品牌沉浸式设计） */
+
+page {
+    --primary-green: #4A7C59;
+    --primary-green-dark: #3D6B4A;
+    --primary-green-light: #6BA57A;
+    --bg-warm: #F5F3EF;
+    --text-dark: #2C3E30;
+    --text-gray: #888888;
+}
+
+.login-page {
+    min-height: 100vh;
+    background: linear-gradient(165deg, #E8F0EB 0%, #F5F3EF 40%, #FBF9F5 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+
+/* 背景装饰圆 */
+.bg-circle {
+    position: absolute;
+    border-radius: 50%;
+    z-index: 0;
+}
+
+.circle-1 {
+    width: 500rpx;
+    height: 500rpx;
+    top: -200rpx;
+    right: -150rpx;
+    background: radial-gradient(circle, rgba(74, 124, 89, 0.1) 0%, transparent 70%);
+}
+
+.circle-2 {
+    width: 300rpx;
+    height: 300rpx;
+    top: 200rpx;
+    left: -100rpx;
+    background: radial-gradient(circle, rgba(139, 115, 85, 0.08) 0%, transparent 70%);
+}
+
+.circle-3 {
+    width: 400rpx;
+    height: 400rpx;
+    bottom: -100rpx;
+    right: -50rpx;
+    background: radial-gradient(circle, rgba(74, 124, 89, 0.06) 0%, transparent 70%);
+}
+
+/* 品牌展示区 */
+.brand-area {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 160rpx;
+    margin-bottom: 60rpx;
+}
+
+.logo-box {
+    width: 140rpx;
+    height: 140rpx;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 40rpx;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 12rpx 40rpx rgba(74, 124, 89, 0.15);
+    margin-bottom: 30rpx;
+    backdrop-filter: blur(10px);
+    border: 2rpx solid rgba(255, 255, 255, 0.6);
+}
+
+.logo-emoji {
+    font-size: 72rpx;
+}
+
+.brand-name-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 16rpx;
+}
+
+.brand-name {
+    font-size: 60rpx;
+    font-weight: 900;
+    color: var(--text-dark);
+    font-family: "STKaiti", "KaiTi", "楷体", serif;
+    letter-spacing: 6rpx;
+    margin-right: 16rpx;
+}
+
+.brand-seal {
+    background: #B83B3B;
+    color: #fff;
+    font-size: 20rpx;
+    padding: 4rpx 8rpx;
+    border-radius: 6rpx;
+    font-family: serif;
+    box-shadow: 0 2rpx 4rpx rgba(184, 59, 59, 0.3);
+    writing-mode: vertical-rl;
+    text-orientation: upright;
+    letter-spacing: 2rpx;
+}
+
+.brand-slogan {
+    font-size: 24rpx;
+    color: var(--text-gray);
+    letter-spacing: 2rpx;
+}
+
+/* 登录卡片 */
+.login-card {
+    position: relative;
+    z-index: 1;
+    width: 88%;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(20px);
+    border-radius: 36rpx;
+    padding: 50rpx 40rpx 40rpx;
+    box-shadow: 0 16rpx 60rpx rgba(0, 0, 0, 0.08);
+    border: 2rpx solid rgba(255, 255, 255, 0.6);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.login-title {
+    font-size: 38rpx;
+    font-weight: 800;
+    color: var(--text-dark);
+    margin-bottom: 10rpx;
+}
+
+.login-desc {
+    font-size: 24rpx;
+    color: var(--text-gray);
+    margin-bottom: 40rpx;
+}
+
+/* 头像选择 */
+.avatar-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 36rpx;
+}
+
+.avatar-choose-btn {
+    position: relative;
+    padding: 0 !important;
+    margin: 0 !important;
+    background: none !important;
+    border: none !important;
+    line-height: normal !important;
+    width: auto !important;
+}
+
+.avatar-choose-btn::after {
+    display: none;
+}
+
+.login-avatar {
+    width: 150rpx;
+    height: 150rpx;
+    border-radius: 50%;
+    border: 6rpx solid rgba(74, 124, 89, 0.15);
+    background: #EEE;
+    box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.1);
+}
+
+.avatar-edit-badge {
+    position: absolute;
+    bottom: 4rpx;
+    right: 4rpx;
+    width: 44rpx;
+    height: 44rpx;
+    background: var(--primary-green);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22rpx;
+    box-shadow: 0 4rpx 10rpx rgba(74, 124, 89, 0.3);
+    border: 3rpx solid #fff;
+}
+
+.avatar-tip {
+    font-size: 22rpx;
+    color: #BBB;
+    margin-top: 12rpx;
+}
+
+/* 昵称输入 */
+.nickname-section {
+    width: 100%;
+    margin-bottom: 40rpx;
+}
+
+.input-box {
+    display: flex;
+    align-items: center;
+    background: rgba(245, 243, 239, 0.8);
+    border-radius: 20rpx;
+    padding: 24rpx 28rpx;
+    border: 2rpx solid rgba(0, 0, 0, 0.04);
+    transition: all 0.3s;
+}
+
+.input-box:focus-within {
+    border-color: var(--primary-green);
+    background: #fff;
+}
+
+.input-icon {
+    font-size: 32rpx;
+    margin-right: 16rpx;
+}
+
+.nickname-input {
+    flex: 1;
+    font-size: 30rpx;
+    color: var(--text-dark);
+}
+
+.input-placeholder {
+    color: #CCC;
+    font-size: 28rpx;
+}
+
+/* 登录按钮 */
+.login-btn {
+    width: 100% !important;
+    height: 96rpx;
+    line-height: 96rpx;
+    background: linear-gradient(135deg, var(--primary-green-light) 0%, var(--primary-green) 50%, var(--primary-green-dark) 100%);
+    color: #fff;
+    border-radius: 48rpx;
+    font-size: 0;
+    font-weight: 700;
+    border: none !important;
+    box-shadow: 0 8rpx 30rpx rgba(74, 124, 89, 0.4);
+    margin-bottom: 30rpx;
+    padding: 0 !important;
+    transition: all 0.3s;
+}
+
+.login-btn::after {
+    display: none;
+}
+
+.login-btn:active {
+    transform: scale(0.97);
+    opacity: 0.9;
+}
+
+.login-btn.disabled {
+    background: linear-gradient(135deg, #CCC 0%, #BBB 100%);
+    box-shadow: none;
+}
+
+.login-btn-text {
+    font-size: 32rpx;
+    letter-spacing: 4rpx;
+}
+
+/* 协议 */
+.agreement {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.checkbox {
+    width: 32rpx;
+    height: 32rpx;
+    border-radius: 8rpx;
+    border: 2rpx solid #DDD;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 10rpx;
+    font-size: 22rpx;
+    color: #fff;
+    transition: all 0.2s;
+}
+
+.checkbox.checked {
+    background: var(--primary-green);
+    border-color: var(--primary-green);
+}
+
+.agreement-text {
+    font-size: 22rpx;
+    color: #999;
+}
+
+.agreement-link {
+    font-size: 22rpx;
+    color: var(--primary-green);
+}
+
+/* 底部文字 */
+.footer-text {
+    position: relative;
+    z-index: 1;
+    margin-top: auto;
+    padding: 40rpx 0;
+    padding-bottom: calc(40rpx + env(safe-area-inset-bottom));
+    font-size: 22rpx;
+    color: #CCC;
+}

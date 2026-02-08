@@ -1,0 +1,53 @@
+<!--pages/admin-goods/admin-goods.wxml-->
+<view class="admin-goods-page">
+
+  <!-- 分类筛选 -->
+  <view class="cat-tabs">
+    <view 
+      class="cat-tab {{currentCat === idx ? 'active' : ''}}"
+      wx:for="{{categories}}"
+      wx:key="id"
+      wx:for-index="idx"
+      bindtap="onCatChange"
+      data-index="{{idx}}"
+    >{{item.name}}</view>
+  </view>
+
+  <!-- 菜品列表 -->
+  <scroll-view class="goods-scroll" scroll-y enhanced show-scrollbar="{{false}}">
+    <view class="goods-list">
+      <view class="goods-card" wx:for="{{displayGoods}}" wx:key="id">
+        <image class="goods-thumb" src="{{item.image}}" mode="aspectFill" lazy-load></image>
+        <view class="goods-body">
+          <view class="goods-top">
+            <text class="goods-name">{{item.name}}</text>
+            <view class="sale-tag {{item.isOnsale !== false ? 'on' : 'off'}}">
+              {{item.isOnsale !== false ? '在售' : '下架'}}
+            </view>
+          </view>
+          <text class="goods-desc">{{item.desc}}</text>
+          <view class="goods-specs" wx:if="{{item.hasSpecs}}">
+            <text class="spec-chip" wx:for="{{item.specs}}" wx:for-item="spec" wx:key="name">
+              {{spec.name}} +¥{{spec.price}}
+            </text>
+          </view>
+          <view class="goods-bottom">
+            <view class="price-box">
+              <text class="yen">¥</text>
+              <text class="price-val">{{item.price}}</text>
+            </view>
+            <view class="goods-ops">
+              <view class="op-toggle" catchtap="onToggleSale" data-id="{{item.id}}">
+                {{item.isOnsale !== false ? '下架' : '上架'}}
+              </view>
+              <view class="op-edit" catchtap="onEditPrice" data-id="{{item.id}}" data-price="{{item.price}}">
+                改价
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </scroll-view>
+
+</view>

@@ -16,33 +16,65 @@ Page({
                         id: 'g001',
                         name: '酸汤砂锅粉',
                         desc: '酸爽开胃，汤底浓郁',
-                        price: 15,
+                        price: 10,
                         image: 'https://picsum.photos/seed/noodle1/300/300',
-                        quantity: 0
+                        quantity: 0,
+                        hasSpecs: true,
+                        specs: [
+                            { name: '卤蛋', price: 2, checked: false },
+                            { name: '瘦肉', price: 3, checked: false },
+                            { name: '肥肠', price: 5, checked: false },
+                            { name: '猪脚', price: 6, checked: false },
+                            { name: '豆腐泡', price: 2, checked: false }
+                        ]
                     },
                     {
                         id: 'g002',
                         name: '麻辣砂锅粉',
                         desc: '麻辣鲜香，过瘾解馋',
-                        price: 16,
+                        price: 10,
                         image: 'https://picsum.photos/seed/noodle2/300/300',
-                        quantity: 0
+                        quantity: 0,
+                        hasSpecs: true,
+                        specs: [
+                            { name: '卤蛋', price: 2, checked: false },
+                            { name: '瘦肉', price: 3, checked: false },
+                            { name: '肥肠', price: 5, checked: false },
+                            { name: '猪脚', price: 6, checked: false },
+                            { name: '豆腐泡', price: 2, checked: false }
+                        ]
                     },
                     {
                         id: 'g003',
                         name: '香菇鸡肉砂锅粉',
                         desc: '鸡肉嫩滑，香菇鲜美',
-                        price: 18,
+                        price: 10,
                         image: 'https://picsum.photos/seed/noodle3/300/300',
-                        quantity: 0
+                        quantity: 0,
+                        hasSpecs: true,
+                        specs: [
+                            { name: '卤蛋', price: 2, checked: false },
+                            { name: '瘦肉', price: 3, checked: false },
+                            { name: '肥肠', price: 5, checked: false },
+                            { name: '猪脚', price: 6, checked: false },
+                            { name: '豆腐泡', price: 2, checked: false }
+                        ]
                     },
                     {
                         id: 'g004',
                         name: '牛腩砂锅粉',
                         desc: '牛腩软烂，入口即化',
-                        price: 22,
+                        price: 10,
                         image: 'https://picsum.photos/seed/noodle4/300/300',
-                        quantity: 0
+                        quantity: 0,
+                        hasSpecs: true,
+                        specs: [
+                            { name: '卤蛋', price: 2, checked: false },
+                            { name: '瘦肉', price: 3, checked: false },
+                            { name: '肥肠', price: 5, checked: false },
+                            { name: '猪脚', price: 6, checked: false },
+                            { name: '豆腐泡', price: 2, checked: false }
+                        ]
                     }
                 ]
             },
@@ -54,25 +86,43 @@ Page({
                         id: 'g005',
                         name: '砂锅鸡粥',
                         desc: '鸡肉嫩滑，粥底绵密',
-                        price: 18,
+                        price: 10,
                         image: 'https://picsum.photos/seed/porridge1/300/300',
-                        quantity: 0
+                        quantity: 0,
+                        hasSpecs: true,
+                        specs: [
+                            { name: '加蛋', price: 2, checked: false },
+                            { name: '加青菜', price: 1, checked: false },
+                            { name: '加虾', price: 5, checked: false }
+                        ]
                     },
                     {
                         id: 'g006',
                         name: '砂锅鱼片粥',
                         desc: '鱼片鲜嫩，营养丰富',
-                        price: 25,
+                        price: 10,
                         image: 'https://picsum.photos/seed/porridge2/300/300',
-                        quantity: 0
+                        quantity: 0,
+                        hasSpecs: true,
+                        specs: [
+                            { name: '加蛋', price: 2, checked: false },
+                            { name: '加青菜', price: 1, checked: false },
+                            { name: '加虾', price: 5, checked: false }
+                        ]
                     },
                     {
                         id: 'g007',
                         name: '皮蛋瘦肉粥',
                         desc: '经典口味，老少皆宜',
-                        price: 15,
+                        price: 10,
                         image: 'https://picsum.photos/seed/porridge3/300/300',
-                        quantity: 0
+                        quantity: 0,
+                        hasSpecs: true,
+                        specs: [
+                            { name: '加蛋', price: 2, checked: false },
+                            { name: '加青菜', price: 1, checked: false },
+                            { name: '加虾', price: 5, checked: false }
+                        ]
                     }
                 ]
             },
@@ -84,17 +134,19 @@ Page({
                         id: 'g008',
                         name: '特色水晶鸡',
                         desc: '皮脆肉嫩，晶莹剔透',
-                        price: 38,
+                        price: 10,
                         image: 'https://picsum.photos/seed/chicken1/300/300',
-                        quantity: 0
+                        quantity: 0,
+                        hasSpecs: false
                     },
                     {
                         id: 'g009',
                         name: '香辣鸭中翅',
                         desc: '香辣可口，下饭神器',
-                        price: 28,
+                        price: 10,
                         image: 'https://picsum.photos/seed/wings1/300/300',
-                        quantity: 0
+                        quantity: 0,
+                        hasSpecs: false
                     }
                 ]
             },
@@ -106,17 +158,19 @@ Page({
                         id: 'g010',
                         name: '凉茶',
                         desc: '清热解暑',
-                        price: 5,
+                        price: 10,
                         image: 'https://picsum.photos/seed/tea1/300/300',
-                        quantity: 0
+                        quantity: 0,
+                        hasSpecs: false
                     },
                     {
                         id: 'g011',
                         name: '柠檬水',
                         desc: '酸甜可口',
-                        price: 6,
+                        price: 10,
                         image: 'https://picsum.photos/seed/lemon1/300/300',
-                        quantity: 0
+                        quantity: 0,
+                        hasSpecs: false
                     }
                 ]
             }
@@ -125,27 +179,53 @@ Page({
 
     onLoad: function (options) { },
 
+    // 点击商品进入详情页
+    onGoodsTap: function (e) {
+        const catIndex = e.currentTarget.dataset.catIndex;
+        const goodsIndex = e.currentTarget.dataset.goodsIndex;
+        wx.navigateTo({
+            url: `/pages/detail/detail?catIndex=${catIndex}&goodsIndex=${goodsIndex}`
+        });
+    },
+
     onCategoryTap: function (e) {
         const index = e.currentTarget.dataset.index;
         this.setData({
             currentCategory: index,
-            scrollIntoView: 'cat_' + (index + 1)
+            scrollIntoView: 'category-' + index
         });
     },
 
-    addToCart: function (e) {
-        const { catIndex, goodsIndex } = e.currentTarget.dataset;
-        this.updateQuantity(catIndex, goodsIndex, 1);
+    // 通过商品 ID 查找索引
+    findGoodsIndex: function (goodsId) {
+        const categories = this.data.categories;
+        for (let catIndex = 0; catIndex < categories.length; catIndex++) {
+            const goods = categories[catIndex].goods;
+            for (let goodsIndex = 0; goodsIndex < goods.length; goodsIndex++) {
+                if (goods[goodsIndex].id === goodsId) {
+                    return { catIndex, goodsIndex };
+                }
+            }
+        }
+        return null;
     },
 
-    increaseQty: function (e) {
-        const { catIndex, goodsIndex } = e.currentTarget.dataset;
-        this.updateQuantity(catIndex, goodsIndex, 1);
+    // 加入购物车 / 增加数量
+    onPlus: function (e) {
+        const goods = e.currentTarget.dataset.goods;
+        const indices = this.findGoodsIndex(goods.id);
+        if (indices) {
+            this.updateQuantity(indices.catIndex, indices.goodsIndex, 1);
+        }
     },
 
-    decreaseQty: function (e) {
-        const { catIndex, goodsIndex } = e.currentTarget.dataset;
-        this.updateQuantity(catIndex, goodsIndex, -1);
+    // 减少数量
+    onMinus: function (e) {
+        const goods = e.currentTarget.dataset.goods;
+        const indices = this.findGoodsIndex(goods.id);
+        if (indices) {
+            this.updateQuantity(indices.catIndex, indices.goodsIndex, -1);
+        }
     },
 
     updateQuantity: function (catIndex, goodsIndex, delta) {
@@ -153,11 +233,19 @@ Page({
         const goods = categories[catIndex].goods[goodsIndex];
         goods.quantity = Math.max(0, goods.quantity + delta);
 
+        // 数量归零时清除加料信息
+        if (goods.quantity === 0) {
+            goods.selectedSpecs = [];
+            goods.specDesc = '';
+            goods.extraFee = 0;
+        }
+
         let cartTotal = 0;
         let cartCount = 0;
         categories.forEach(cat => {
             cat.goods.forEach(g => {
-                cartTotal += g.price * g.quantity;
+                const extra = (g.extraFee || 0) * g.quantity;
+                cartTotal += g.price * g.quantity + extra;
                 cartCount += g.quantity;
             });
         });
@@ -177,17 +265,32 @@ Page({
         }
     },
 
+    // 购物车弹窗里点击商品名跳详情
+    onCartItemTap: function (e) {
+        const goods = e.currentTarget.dataset.goods;
+        const indices = this.findGoodsIndex(goods.id);
+        if (indices) {
+            this.setData({ showCartDetail: false });
+            wx.navigateTo({
+                url: `/pages/detail/detail?catIndex=${indices.catIndex}&goodsIndex=${indices.goodsIndex}`
+            });
+        }
+    },
+
     showCartDetail: function () {
         if (this.data.cartCount > 0) {
+            wx.hideTabBar({ animation: true });
             this.setData({ showCartDetail: true });
         }
     },
 
     hideCartDetail: function () {
         this.setData({ showCartDetail: false });
+        wx.showTabBar({ animation: true });
     },
 
-    clearCart: function () {
+    // 清空购物车
+    onClearCart: function () {
         const categories = this.data.categories;
         categories.forEach(cat => {
             cat.goods.forEach(g => {
@@ -203,8 +306,22 @@ Page({
         wx.showTabBar({ animation: true });
     },
 
+    clearCart: function () {
+        this.onClearCart();
+    },
+
     goToCheckout: function () {
-        // 收集已选商品
+        // 未登录时引导登录
+        const app = getApp();
+        if (!app.globalData.isLogin) {
+            wx.navigateTo({ url: '/pages/login/login' });
+            return;
+        }
+
+        // 先关闭弹窗
+        this.setData({ showCartDetail: false });
+
+        // 收集已选商品（含加料信息）
         const selectedItems = [];
         this.data.categories.forEach(cat => {
             cat.goods.forEach(g => {
@@ -213,11 +330,17 @@ Page({
                         id: g.id,
                         name: g.name,
                         price: g.price,
-                        quantity: g.quantity
+                        quantity: g.quantity,
+                        specDesc: g.specDesc || '',
+                        selectedSpecs: g.selectedSpecs || [],
+                        extraFee: g.extraFee || 0
                     });
                 }
             });
         });
+
+        console.log('[goToCheckout] selectedItems:', JSON.stringify(selectedItems));
+        console.log('[goToCheckout] cartTotal:', this.data.cartTotal);
 
         // 存储到本地，跳转到结算页
         wx.setStorageSync('cartItems', selectedItems);
@@ -225,5 +348,10 @@ Page({
         wx.navigateTo({
             url: '/pages/checkout/checkout'
         });
+    },
+
+    // WXML 中用的方法名
+    goCheckout: function () {
+        this.goToCheckout();
     }
 });

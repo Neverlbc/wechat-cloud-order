@@ -68,12 +68,16 @@
         id="category-{{index}}"
       >
         <view class="section-title">{{item.name}}</view>
-        <view class="goods-item" wx:for="{{item.goods}}" wx:for-item="goods" wx:key="id">
-          <image class="goods-image" src="{{goods.image}}" mode="aspectFill" lazy-load></image>
+        <view class="goods-item" wx:for="{{item.goods}}" wx:for-item="goods" wx:for-index="gIdx" wx:key="id">
+          <image class="goods-image" src="{{goods.image}}" mode="aspectFill" lazy-load bindtap="onGoodsTap" data-cat-index="{{index}}" data-goods-index="{{gIdx}}"></image>
           <view class="goods-info">
-            <view>
+            <view bindtap="onGoodsTap" data-cat-index="{{index}}" data-goods-index="{{gIdx}}">
               <view class="goods-name">{{goods.name}}</view>
               <view class="goods-desc">{{goods.desc}}</view>
+              <view class="goods-spec-hint" wx:if="{{goods.hasSpecs}}">
+                <text class="spec-hint-icon">✨</text>
+                <text>可加料</text>
+              </view>
             </view>
             <view class="goods-bottom">
               <view class="goods-price">
@@ -114,14 +118,18 @@
       <block wx:for="{{categories}}" wx:key="id" wx:for-item="category">
         <block wx:for="{{category.goods}}" wx:key="id" wx:for-item="item">
           <view class="cart-item" wx:if="{{item.quantity > 0}}">
-            <view class="cart-item-info">
+            <view class="cart-item-info" bindtap="onCartItemTap" data-goods="{{item}}">
               <view class="cart-item-name">{{item.name}}</view>
+              <view class="cart-item-spec" wx:if="{{item.specDesc}}">{{item.specDesc}}</view>
+              <view class="cart-item-spec cart-item-spec-none" wx:else>{{item.hasSpecs ? '未加料' : ''}}</view>
             </view>
-            <view class="cart-item-price">¥{{item.price * item.quantity}}</view>
-            <view class="quantity-control" style="background: var(--primary-green); padding: 4rpx 12rpx;">
-              <view class="action-btn minus" style="font-size: 28rpx;" catchtap="onMinus" data-goods="{{item}}">-</view>
-              <text class="quantity" style="font-size: 24rpx; margin: 0 10rpx;">{{item.quantity}}</text>
-              <view class="action-btn plus" style="font-size: 28rpx;" catchtap="onPlus" data-goods="{{item}}">+</view>
+            <view class="cart-item-right">
+              <view class="cart-item-price">¥{{item.price * item.quantity + (item.extraFee || 0) * item.quantity}}</view>
+              <view class="cart-qty-control">
+                <view class="cart-qty-btn" catchtap="onMinus" data-goods="{{item}}">-</view>
+                <text class="cart-qty-num">{{item.quantity}}</text>
+                <view class="cart-qty-btn" catchtap="onPlus" data-goods="{{item}}">+</view>
+              </view>
             </view>
           </view>
         </block>

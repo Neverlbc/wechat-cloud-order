@@ -1,0 +1,260 @@
+/* pages/order/order.wxss */
+/* 一味鲜 - 订单页（延续主页设计语言） */
+
+page {
+    --primary-green: #4A7C59;
+    --primary-green-dark: #3D6B4A;
+    --gold-accent: #8B7355;
+    --bg-light: #F5F3EF;
+    --bg-white: #FFFFFF;
+    --text-dark: #333333;
+    --text-gray: #888888;
+    --card-radius: 20rpx;
+}
+
+.order-page {
+    min-height: 100vh;
+    background: var(--bg-light);
+    display: flex;
+    flex-direction: column;
+}
+
+/* Tab 选项卡 */
+.order-tabs {
+    display: flex;
+    background: var(--bg-white);
+    padding: 0 10rpx;
+    box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.04);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.tab-item {
+    flex: 1;
+    text-align: center;
+    padding: 28rpx 0;
+    font-size: 26rpx;
+    color: var(--text-gray);
+    position: relative;
+    transition: all 0.3s;
+}
+
+.tab-item.active {
+    color: var(--primary-green);
+    font-weight: 700;
+    font-size: 28rpx;
+}
+
+.tab-line {
+    position: absolute;
+    bottom: 4rpx;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40rpx;
+    height: 6rpx;
+    background: var(--primary-green);
+    border-radius: 3rpx;
+}
+
+/* 订单列表 */
+.order-list {
+    flex: 1;
+    padding: 20rpx 24rpx;
+    height: 0; /* 配合 flex:1 让 scroll-view 撑满剩余空间 */
+}
+
+/* 订单卡片 */
+.order-card {
+    background: var(--bg-white);
+    border-radius: var(--card-radius);
+    padding: 28rpx 32rpx;
+    margin-bottom: 24rpx;
+    box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.05);
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 20rpx;
+    border-bottom: 1rpx solid rgba(0, 0, 0, 0.05);
+}
+
+.order-id {
+    display: flex;
+    flex-direction: column;
+}
+
+.order-label {
+    font-size: 22rpx;
+    color: #BBB;
+    margin-bottom: 4rpx;
+}
+
+.order-num {
+    font-size: 24rpx;
+    color: var(--text-gray);
+    font-family: 'Courier New', monospace;
+}
+
+.order-status {
+    font-size: 26rpx;
+    font-weight: 600;
+}
+
+/* 商品项 */
+.card-items {
+    padding: 20rpx 0;
+}
+
+.card-item {
+    display: flex;
+    align-items: center;
+    padding: 10rpx 0;
+}
+
+.card-item-name {
+    flex: 1;
+    font-size: 28rpx;
+    color: var(--text-dark);
+}
+
+.card-item-qty {
+    font-size: 26rpx;
+    color: var(--text-gray);
+    margin-right: 20rpx;
+}
+
+.card-item-price {
+    font-size: 28rpx;
+    color: var(--text-dark);
+    font-weight: 500;
+    min-width: 100rpx;
+    text-align: right;
+}
+
+.card-item-more {
+    font-size: 24rpx;
+    color: #BBB;
+    padding: 6rpx 0;
+}
+
+/* 卡片底部 */
+.card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 20rpx;
+    border-top: 1rpx solid rgba(0, 0, 0, 0.05);
+}
+
+.order-info {
+    display: flex;
+    align-items: center;
+}
+
+.order-type {
+    font-size: 24rpx;
+    color: var(--text-gray);
+    margin-right: 16rpx;
+}
+
+.order-time {
+    font-size: 22rpx;
+    color: #BBB;
+}
+
+.order-total {
+    display: flex;
+    align-items: baseline;
+}
+
+.total-label {
+    font-size: 24rpx;
+    color: #999;
+    margin-right: 10rpx;
+}
+
+.total-value {
+    font-size: 36rpx;
+    font-weight: 800;
+    color: var(--gold-accent);
+}
+
+/* 操作按钮 */
+.card-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 16rpx;
+    padding-top: 20rpx;
+}
+
+.action-btn-outline {
+    padding: 12rpx 30rpx;
+    border-radius: 30rpx;
+    font-size: 24rpx;
+    border: 2rpx solid #DDD;
+    color: #999;
+}
+
+.action-btn-outline:active {
+    background: #F5F5F5;
+}
+
+.action-btn-solid {
+    padding: 12rpx 30rpx;
+    border-radius: 30rpx;
+    font-size: 24rpx;
+    background: var(--primary-green);
+    color: #fff;
+    font-weight: 600;
+}
+
+.action-btn-solid:active {
+    opacity: 0.85;
+}
+
+/* 空状态 */
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100%;
+    padding-bottom: 120rpx; /* 视觉微调，略偏上更舒适 */
+}
+
+.empty-icon {
+    font-size: 120rpx;
+    margin-bottom: 30rpx;
+    opacity: 0.6;
+}
+
+.empty-title {
+    font-size: 34rpx;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 12rpx;
+}
+
+.empty-desc {
+    font-size: 26rpx;
+    color: #BBB;
+    margin-bottom: 50rpx;
+}
+
+.empty-btn {
+    background: var(--primary-green);
+    color: #fff;
+    padding: 20rpx 60rpx;
+    border-radius: 40rpx;
+    font-size: 30rpx;
+    font-weight: 600;
+    box-shadow: 0 6rpx 20rpx rgba(74, 124, 89, 0.3);
+}
+
+.empty-btn:active {
+    transform: scale(0.96);
+    opacity: 0.9;
+}

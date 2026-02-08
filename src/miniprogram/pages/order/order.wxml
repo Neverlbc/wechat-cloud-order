@@ -1,3 +1,79 @@
-<view class="container">
-  <text>订单列表正在开发中...</text>
+<!--pages/order/order.wxml-->
+<view class="order-page">
+
+  <!-- Tab 选项卡 -->
+  <view class="order-tabs">
+    <view 
+      class="tab-item {{currentTab === index ? 'active' : ''}}" 
+      wx:for="{{tabs}}" 
+      wx:key="index"
+      bindtap="onTabChange"
+      data-index="{{index}}"
+    >
+      <text>{{item}}</text>
+      <view class="tab-line" wx:if="{{currentTab === index}}"></view>
+    </view>
+  </view>
+
+  <!-- 订单列表 -->
+  <scroll-view class="order-list" scroll-y enhanced show-scrollbar="{{false}}">
+    <block wx:if="{{filteredOrders.length > 0}}">
+      <view 
+        class="order-card" 
+        wx:for="{{filteredOrders}}" 
+        wx:key="orderId"
+        bindtap="onOrderTap"
+        data-id="{{item.orderId}}"
+      >
+        <!-- 卡片头部 -->
+        <view class="card-header">
+          <view class="order-id">
+            <text class="order-label">订单号</text>
+            <text class="order-num">{{item.orderId}}</text>
+          </view>
+          <view class="order-status" style="color: {{statusMap[item.status].color}}">
+            <text>{{statusMap[item.status].icon}} {{statusMap[item.status].text}}</text>
+          </view>
+        </view>
+
+        <!-- 商品列表 -->
+        <view class="card-items">
+          <view class="card-item" wx:for="{{item.items}}" wx:for-item="goods" wx:key="id" wx:if="{{index < 3}}">
+            <text class="card-item-name">{{goods.name}}</text>
+            <text class="card-item-qty">x{{goods.quantity}}</text>
+            <text class="card-item-price">¥{{goods.price * goods.quantity}}</text>
+          </view>
+          <view class="card-item-more" wx:if="{{item.items.length > 3}}">
+            <text>还有 {{item.items.length - 3}} 件商品...</text>
+          </view>
+        </view>
+
+        <!-- 卡片底部 -->
+        <view class="card-footer">
+          <view class="order-info">
+            <text class="order-type">{{item.deliveryType === 'pickup' ? '🏪 自取' : '🛵 配送'}}</text>
+            <text class="order-time">{{item.createTime}}</text>
+          </view>
+          <view class="order-total">
+            <text class="total-label">合计</text>
+            <text class="total-value">¥{{item.totalAmount}}</text>
+          </view>
+        </view>
+
+        <!-- 操作按钮 -->
+        <view class="card-actions">
+          <view class="action-btn-outline" wx:if="{{item.status === 0}}" catchtap="onCancelOrder" data-id="{{item.orderId}}">取消订单</view>
+          <view class="action-btn-solid" wx:if="{{item.status === 4 || item.status === -1}}" catchtap="onReorder" data-id="{{item.orderId}}">再来一单</view>
+        </view>
+      </view>
+    </block>
+
+    <!-- 空状态 -->
+    <view class="empty-state" wx:else>
+      <text class="empty-icon">📋</text>
+      <text class="empty-title">暂无订单</text>
+      <text class="empty-desc">快去点一碗热乎乎的砂锅粉吧~</text>
+      <view class="empty-btn" bindtap="goToMenu">去点餐</view>
+    </view>
+  </scroll-view>
 </view>

@@ -1,3 +1,110 @@
-<view class="container">
-  <text>个人中心正在开发中...</text>
+<!--pages/me/me.wxml-->
+<view class="me-page">
+  
+  <!-- 用户卡片 - 已登录 -->
+  <view class="user-card" wx:if="{{isLogin}}">
+    <view class="user-bg-decoration"></view>
+    <view class="user-info">
+      <image 
+        class="user-avatar" 
+        src="{{userInfo.avatarUrl || 'https://picsum.photos/seed/avatar/200/200'}}" 
+        mode="aspectFill"
+      ></image>
+      <view class="user-detail">
+        <text class="nickname-display">{{userInfo.nickName}}</text>
+        <text class="user-tag">🌿 一味鲜会员</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 用户卡片 - 未登录 -->
+  <view class="user-card" wx:else bindtap="goLogin">
+    <view class="user-bg-decoration"></view>
+    <view class="user-info">
+      <view class="user-avatar-placeholder">
+        <text class="avatar-placeholder-icon">👤</text>
+      </view>
+      <view class="user-detail">
+        <text class="login-prompt">点击登录</text>
+        <text class="login-sub">登录后享受便捷点餐体验</text>
+      </view>
+      <text class="login-arrow">›</text>
+    </view>
+  </view>
+
+  <!-- 订单快捷入口 -->
+  <view class="order-shortcuts">
+    <view class="shortcuts-header">
+      <text class="shortcuts-title">我的订单</text>
+      <view class="view-all" bindtap="goAllOrders">
+        <text>查看全部</text>
+        <text class="arrow">›</text>
+      </view>
+    </view>
+    <view class="shortcuts-grid">
+      <view class="shortcut-item" bindtap="goToOrders" data-type="pending">
+        <view class="shortcut-icon-box">
+          <text class="shortcut-icon">💰</text>
+          <view class="shortcut-badge" wx:if="{{orderStats.pending > 0}}">{{orderStats.pending}}</view>
+        </view>
+        <text class="shortcut-text">待付款</text>
+      </view>
+      <view class="shortcut-item" bindtap="goToOrders" data-type="delivering">
+        <view class="shortcut-icon-box">
+          <text class="shortcut-icon">🛵</text>
+          <view class="shortcut-badge" wx:if="{{orderStats.delivering > 0}}">{{orderStats.delivering}}</view>
+        </view>
+        <text class="shortcut-text">配送中</text>
+      </view>
+      <view class="shortcut-item" bindtap="goToOrders" data-type="completed">
+        <view class="shortcut-icon-box">
+          <text class="shortcut-icon">✅</text>
+          <view class="shortcut-badge" wx:if="{{orderStats.completed > 0}}">{{orderStats.completed}}</view>
+        </view>
+        <text class="shortcut-text">已完成</text>
+      </view>
+      <view class="shortcut-item" bindtap="goAllOrders">
+        <view class="shortcut-icon-box">
+          <text class="shortcut-icon">📋</text>
+        </view>
+        <text class="shortcut-text">全部</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 功能菜单 -->
+  <view class="menu-section">
+    <!-- 商家管理入口（连点5次版本号触发） -->
+    <view class="menu-item admin-entry" wx:if="{{isAdmin}}" bindtap="onMenuTap" data-action="admin">
+      <view class="menu-left">
+        <text class="menu-icon">📊</text>
+        <text class="menu-title">商家管理</text>
+      </view>
+      <view class="admin-right">
+        <text class="admin-tag">已验证</text>
+        <text class="menu-arrow">›</text>
+      </view>
+    </view>
+
+    <view 
+      class="menu-item" 
+      wx:for="{{menuItems}}" 
+      wx:key="action"
+      bindtap="onMenuTap"
+      data-action="{{item.action}}"
+    >
+      <view class="menu-left">
+        <text class="menu-icon">{{item.icon}}</text>
+        <text class="menu-title">{{item.title}}</text>
+      </view>
+      <text class="menu-arrow">›</text>
+    </view>
+  </view>
+
+  <!-- 底部品牌 -->
+  <view class="footer-brand">
+    <text class="footer-logo">🌿</text>
+    <text class="footer-name">一味鲜粉店</text>
+    <text class="footer-ver" bindtap="onVersionTap">v1.0.0</text>
+  </view>
 </view>

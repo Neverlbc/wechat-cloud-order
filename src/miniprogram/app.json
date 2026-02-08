@@ -2,7 +2,13 @@
     "pages": [
         "pages/index/index",
         "pages/order/order",
-        "pages/me/me"
+        "pages/me/me",
+        "pages/checkout/checkout",
+        "pages/login/login",
+        "pages/detail/detail",
+        "pages/admin/admin",
+        "pages/admin-orders/admin-orders",
+        "pages/admin-goods/admin-goods"
     ],
     "window": {
         "backgroundColor": "#F6F6F6",

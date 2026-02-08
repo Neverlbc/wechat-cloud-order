@@ -1,0 +1,97 @@
+<!--pages/admin-orders/admin-orders.wxml-->
+<view class="admin-orders-page">
+
+  <!-- 状态筛选 Tab -->
+  <view class="filter-tabs">
+    <view 
+      class="tab-item {{currentTab === idx ? 'active' : ''}}"
+      wx:for="{{tabs}}"
+      wx:key="status"
+      wx:for-index="idx"
+      bindtap="onTabChange"
+      data-index="{{idx}}"
+    >
+      <text>{{item.label}}</text>
+      <view class="tab-badge" wx:if="{{item.count > 0}}">{{item.count}}</view>
+    </view>
+  </view>
+
+  <!-- 订单列表 -->
+  <scroll-view class="order-scroll" scroll-y enhanced show-scrollbar="{{false}}">
+    <view class="order-list" wx:if="{{filteredOrders.length > 0}}">
+      <view class="order-card" wx:for="{{filteredOrders}}" wx:key="orderId">
+        
+        <!-- 卡片头部 -->
+        <view class="card-header">
+          <view class="header-left">
+            <text class="order-no">{{item.orderId}}</text>
+            <text class="status-tag tag-{{item.status}}">{{item.statusText}}</text>
+          </view>
+          <text class="order-time">{{item.createTime}}</text>
+        </view>
+
+        <!-- 用户信息 -->
+        <view class="user-row">
+          <text class="user-label">{{item.deliveryType === 'delivery' ? '🛵 配送' : '🏪 自取'}}</text>
+          <text class="user-info" wx:if="{{item.address}}">{{item.address.name}} {{item.address.phone}}</text>
+        </view>
+        <view class="address-row" wx:if="{{item.deliveryType === 'delivery' && item.address}}">
+          <text>📍 {{item.address.detail}}</text>
+        </view>
+
+        <!-- 商品明细 -->
+        <view class="goods-detail">
+          <view class="goods-row" wx:for="{{item.items}}" wx:for-item="food" wx:key="id">
+            <view class="goods-left">
+              <text class="goods-name">{{food.name}}</text>
+              <text class="goods-spec" wx:if="{{food.specDesc}}">{{food.specDesc}}</text>
+            </view>
+            <text class="goods-qty">x{{food.quantity}}</text>
+            <text class="goods-price">¥{{food.price * food.quantity + (food.extraFee || 0) * food.quantity}}</text>
+          </view>
+        </view>
+
+        <!-- 备注 -->
+        <view class="remark-row" wx:if="{{item.remark}}">
+          <text class="remark-label">📝 备注：</text>
+          <text class="remark-text">{{item.remark}}</text>
+        </view>
+
+        <!-- 底部 -->
+        <view class="card-footer">
+          <view class="total-row">
+            <text class="total-label">合计</text>
+            <text class="total-amount">¥{{item.totalAmount}}</text>
+          </view>
+
+          <!-- 操作按钮组：根据状态动态显示 -->
+          <view class="btn-group">
+            <!-- 待支付 -->
+            <block wx:if="{{item.status === 0}}">
+              <view class="op-btn btn-cancel" catchtap="onCancelOrder" data-id="{{item.orderId}}">取消</view>
+            </block>
+            <!-- 待确认 -->
+            <block wx:if="{{item.status === 1}}">
+              <view class="op-btn btn-cancel" catchtap="onRejectOrder" data-id="{{item.orderId}}">拒绝</view>
+              <view class="op-btn btn-primary" catchtap="onAcceptOrder" data-id="{{item.orderId}}">接单</view>
+            </block>
+            <!-- 配送中 -->
+            <block wx:if="{{item.status === 2}}">
+              <view class="op-btn btn-primary" catchtap="onDelivered" data-id="{{item.orderId}}">确认送达</view>
+            </block>
+            <!-- 已送达 -->
+            <block wx:if="{{item.status === 3}}">
+              <view class="op-btn btn-done" catchtap="onComplete" data-id="{{item.orderId}}">完成订单</view>
+            </block>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view class="empty-state" wx:else>
+      <text class="empty-icon">📭</text>
+      <text class="empty-text">暂无该状态的订单</text>
+    </view>
+  </scroll-view>
+
+</view>

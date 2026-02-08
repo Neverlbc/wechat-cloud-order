@@ -1,0 +1,118 @@
+<!--pages/admin/admin.wxml-->
+<view class="admin-page">
+
+  <!-- 顶部统计面板 -->
+  <view class="stats-panel">
+    <view class="stats-row">
+      <view class="stat-card highlight">
+        <text class="stat-num">{{stats.todayOrders}}</text>
+        <text class="stat-label">今日订单</text>
+      </view>
+      <view class="stat-card">
+        <text class="stat-num">¥{{stats.todayRevenue}}</text>
+        <text class="stat-label">今日营收</text>
+      </view>
+      <view class="stat-card">
+        <text class="stat-num">{{stats.pendingOrders}}</text>
+        <text class="stat-label">待处理</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 快捷操作 -->
+  <view class="action-grid">
+    <view class="action-item" bindtap="goOrderManage">
+      <view class="action-icon-box" style="background: linear-gradient(135deg, #FF6B6B, #EE4444);">
+        <text class="action-icon">📋</text>
+      </view>
+      <text class="action-text">订单管理</text>
+      <view class="action-badge" wx:if="{{stats.pendingOrders > 0}}">{{stats.pendingOrders}}</view>
+    </view>
+    <view class="action-item" bindtap="goGoodsManage">
+      <view class="action-icon-box" style="background: linear-gradient(135deg, #5D9B6E, #4A7C59);">
+        <text class="action-icon">🍜</text>
+      </view>
+      <text class="action-text">菜品管理</text>
+    </view>
+    <view class="action-item" bindtap="goSalesStats">
+      <view class="action-icon-box" style="background: linear-gradient(135deg, #F0A04B, #D4882A);">
+        <text class="action-icon">📊</text>
+      </view>
+      <text class="action-text">销售统计</text>
+    </view>
+    <view class="action-item" bindtap="goSettings">
+      <view class="action-icon-box" style="background: linear-gradient(135deg, #8B7355, #6D5A42);">
+        <text class="action-icon">⚙️</text>
+      </view>
+      <text class="action-text">店铺设置</text>
+    </view>
+  </view>
+
+  <!-- 待处理订单列表 -->
+  <view class="section">
+    <view class="section-header">
+      <text class="section-title">待处理订单</text>
+      <view class="section-more" bindtap="goOrderManage">
+        <text>查看全部</text>
+        <text class="arrow">›</text>
+      </view>
+    </view>
+
+    <view class="order-list" wx:if="{{pendingOrders.length > 0}}">
+      <view class="admin-order-card" wx:for="{{pendingOrders}}" wx:key="orderId">
+        <view class="order-card-header">
+          <view class="order-id-row">
+            <text class="order-id">{{item.orderId}}</text>
+            <text class="order-status status-{{item.status}}">{{item.statusText}}</text>
+          </view>
+          <text class="order-time">{{item.createTime}}</text>
+        </view>
+
+        <view class="order-card-body">
+          <view class="order-item-row" wx:for="{{item.items}}" wx:for-item="food" wx:key="id">
+            <text class="food-name">{{food.name}}</text>
+            <text class="food-spec" wx:if="{{food.specDesc}}">（{{food.specDesc}}）</text>
+            <text class="food-qty">x{{food.quantity}}</text>
+          </view>
+        </view>
+
+        <view class="order-card-footer">
+          <view class="order-info-row">
+            <text class="order-address" wx:if="{{item.deliveryType === 'delivery'}}">📍 {{item.address.detail || '未填写地址'}}</text>
+            <text class="order-address" wx:else>🏪 到店自取</text>
+            <text class="order-total">¥{{item.totalAmount}}</text>
+          </view>
+          <view class="order-actions">
+            <view class="admin-btn btn-reject" catchtap="onRejectOrder" data-order-id="{{item.orderId}}">拒绝</view>
+            <view class="admin-btn btn-accept" catchtap="onAcceptOrder" data-order-id="{{item.orderId}}">接单</view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view class="empty-state" wx:else>
+      <text class="empty-icon">🎉</text>
+      <text class="empty-text">暂无待处理订单</text>
+    </view>
+  </view>
+
+  <!-- 今日已完成 -->
+  <view class="section">
+    <view class="section-header">
+      <text class="section-title">今日已完成</text>
+    </view>
+    <view class="completed-summary" wx:if="{{completedOrders.length > 0}}">
+      <view class="completed-item" wx:for="{{completedOrders}}" wx:key="orderId" wx:if="{{index < 5}}">
+        <view class="completed-left">
+          <text class="completed-id">{{item.orderId}}</text>
+          <text class="completed-items">{{item.itemsSummary}}</text>
+        </view>
+        <text class="completed-amount">¥{{item.totalAmount}}</text>
+      </view>
+    </view>
+    <view class="empty-state small" wx:else>
+      <text class="empty-text">今日暂无完成订单</text>
+    </view>
+  </view>
+
+</view>

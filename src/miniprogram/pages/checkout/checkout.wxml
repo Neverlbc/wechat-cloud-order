@@ -1,0 +1,160 @@
+<!--pages/checkout/checkout.wxml-->
+<view class="checkout-page">
+
+  <!-- 配送地址卡片 -->
+  <view class="address-card" bindtap="onEditAddress">
+    <view class="address-content" wx:if="{{address.name}}">
+      <view class="address-icon">📍</view>
+      <view class="address-detail">
+        <view class="address-user">
+          <text class="user-name">{{address.name}}</text>
+          <text class="user-phone">{{address.phone}}</text>
+        </view>
+        <view class="address-text">{{address.detail}}</view>
+      </view>
+      <view class="address-arrow">›</view>
+    </view>
+    <view class="address-empty" wx:else>
+      <view class="address-icon">📍</view>
+      <text class="empty-text">请填写配送地址</text>
+      <view class="address-arrow">›</view>
+    </view>
+    <!-- 锯齿底边 -->
+    <view class="address-zigzag"></view>
+  </view>
+
+  <!-- 商品清单 -->
+  <view class="order-section">
+    <view class="section-header">
+      <text class="section-icon">🛒</text>
+      <text class="section-title">商品清单</text>
+      <text class="section-count">共{{totalCount}}件</text>
+    </view>
+    <view class="order-items">
+      <view class="order-item" wx:for="{{cartItems}}" wx:key="id">
+        <view class="item-info">
+          <text class="item-name">{{item.name}}</text>
+          <text class="item-spec" wx:if="{{item.specDesc}}">{{item.specDesc}}</text>
+        </view>
+        <view class="item-right">
+          <text class="item-quantity">x{{item.quantity}}</text>
+          <text class="item-price">¥{{item.subtotal}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 配送方式 -->
+  <view class="order-section">
+    <view class="section-header">
+      <text class="section-icon">🚗</text>
+      <text class="section-title">配送方式</text>
+    </view>
+    <view class="delivery-options">
+      <view 
+        class="delivery-option {{deliveryType === 'delivery' ? 'active' : ''}}" 
+        bindtap="onDeliveryChange" 
+        data-type="delivery"
+      >
+        <text class="delivery-emoji">🛵</text>
+        <text>外卖配送</text>
+      </view>
+      <view 
+        class="delivery-option {{deliveryType === 'pickup' ? 'active' : ''}}" 
+        bindtap="onDeliveryChange" 
+        data-type="pickup"
+      >
+        <text class="delivery-emoji">🏪</text>
+        <text>到店自取</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 备注 -->
+  <view class="order-section">
+    <view class="section-header">
+      <text class="section-icon">📝</text>
+      <text class="section-title">备注</text>
+    </view>
+    <view class="remark-box">
+      <textarea 
+        class="remark-input" 
+        placeholder="口味偏好、过敏信息等（选填）" 
+        placeholder-class="remark-placeholder"
+        maxlength="200"
+        value="{{remark}}"
+        bindinput="onRemarkInput"
+      ></textarea>
+      <text class="remark-counter">{{remark.length}}/200</text>
+    </view>
+  </view>
+
+  <!-- 金额明细 -->
+  <view class="order-section price-section">
+    <view class="price-row">
+      <text class="price-label">商品小计</text>
+      <text class="price-value">¥{{cartTotal}}</text>
+    </view>
+    <view class="price-row">
+      <text class="price-label">配送费</text>
+      <text class="price-value {{deliveryFee === 0 ? 'free' : ''}}">
+        {{deliveryFee === 0 ? '免配送费' : '¥' + deliveryFee}}
+      </text>
+    </view>
+    <view class="price-row">
+      <text class="price-label">包装费</text>
+      <text class="price-value">¥{{packingFee}}</text>
+    </view>
+    <view class="price-divider"></view>
+    <view class="price-row total">
+      <text class="price-label">合计</text>
+      <view class="total-amount">
+        <text class="total-symbol">¥</text>
+        <text class="total-number">{{totalAmount}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部安全区占位 -->
+  <view style="height: 180rpx;"></view>
+
+  <!-- 底部结算栏 -->
+  <view class="submit-bar">
+    <view class="submit-left">
+      <text class="submit-label">实付</text>
+      <view class="submit-price">
+        <text class="submit-symbol">¥</text>
+        <text class="submit-amount">{{totalAmount}}</text>
+      </view>
+    </view>
+    <view class="submit-btn {{canSubmit ? '' : 'disabled'}}" bindtap="onSubmitOrder">
+      提交订单
+    </view>
+  </view>
+</view>
+
+<!-- 地址编辑弹窗 -->
+<view class="address-modal-mask {{showAddressModal ? 'show' : ''}}" bindtap="onCloseAddressModal"></view>
+<view class="address-modal {{showAddressModal ? 'show' : ''}}">
+  <view class="modal-header">
+    <text class="modal-title">配送地址</text>
+    <view class="modal-close" bindtap="onCloseAddressModal">✕</view>
+  </view>
+  <view class="modal-body">
+    <view class="form-item">
+      <text class="form-label">联系人</text>
+      <input class="form-input" placeholder="请输入姓名" value="{{addressForm.name}}" bindinput="onAddressInput" data-field="name" />
+    </view>
+    <view class="form-item">
+      <text class="form-label">手机号</text>
+      <input class="form-input" type="number" maxlength="11" placeholder="请输入手机号" value="{{addressForm.phone}}" bindinput="onAddressInput" data-field="phone" />
+    </view>
+    <view class="form-item">
+      <text class="form-label">详细地址</text>
+      <input class="form-input" placeholder="楼栋/门牌号等" value="{{addressForm.detail}}" bindinput="onAddressInput" data-field="detail" />
+    </view>
+  </view>
+  <view class="modal-footer">
+    <view class="modal-save-btn" bindtap="onSaveAddress">保存地址</view>
+  </view>
+</view>
