@@ -1,0 +1,27 @@
+{
+  "miniprogramRoot": "src/miniprogram/",
+  "cloudfunctionRoot": "src/cloudfunctions/",
+  "setting": {
+    "es6": true,
+    "postcss": true,
+    "minified": true,
+    "uglifyFileName": false,
+    "enhance": true,
+    "minifyWXML": true,
+    "packNpmManually": true,
+    "packNpmRelationList": [
+      {
+        "packageJsonPath": "src/package.json",
+        "miniprogramNpmDistDir": "src/miniprogram/"
+      }
+    ]
+  },
+  "compileType": "miniprogram",
+  "simulatorPluginLibVersion": {},
+  "packOptions": {
+    "ignore": [],
+    "include": []
+  },
+  "appid": "wx7652332b590e110b",
+  "editorSetting": {}
+}

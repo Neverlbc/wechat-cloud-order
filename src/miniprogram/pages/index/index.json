@@ -1,4 +1,5 @@
 {
-    "navigationBarTitleText": "一味鲜粉店 - 点餐",
+    "navigationBarTitleText": "一味鲜",
+    "backgroundColor": "#F5F3EF",
     "usingComponents": {}
 }

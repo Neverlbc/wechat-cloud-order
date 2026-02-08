@@ -21,24 +21,22 @@
                 "pagePath": "pages/index/index",
                 "text": "点餐",
                 "iconPath": "images/tab/home.png",
-                "selectedIconPath": "images/tab/home_active.png"
+                "selectedIconPath": "images/tab/home-active.png"
             },
             {
                 "pagePath": "pages/order/order",
                 "text": "订单",
                 "iconPath": "images/tab/order.png",
-                "selectedIconPath": "images/tab/order_active.png"
+                "selectedIconPath": "images/tab/order-active.png"
             },
             {
                 "pagePath": "pages/me/me",
                 "text": "我的",
                 "iconPath": "images/tab/me.png",
-                "selectedIconPath": "images/tab/me_active.png"
+                "selectedIconPath": "images/tab/me-active.png"
             }
         ]
     },
     "sitemapLocation": "sitemap.json",
-    "usingComponents": {
-        "van-button": "@vant/weapp/button/index"
-    }
+    "usingComponents": {}
 }

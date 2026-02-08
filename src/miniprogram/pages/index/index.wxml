@@ -1,11 +1,152 @@
 <!--pages/index/index.wxml-->
-<view class="container">
-  <view class="header">
-    <text class="title">一味鲜粉店</text>
-    <text class="subtitle">特色砂锅粉 · 粥品 · 小吃</text>
+<view class="page-container">
+  <!-- 顶部设计区域 (High-End Design) -->
+  <view class="header-container">
+    <!-- 背景装饰 -->
+    <view class="header-bg-decoration"></view>
+    
+    <!-- 品牌主展示 -->
+    <view class="brand-section">
+      <view class="brand-left">
+        <view class="brand-name-box">
+          <text class="brand-name">一味鲜</text>
+          <text class="brand-seal">甄选</text> <!-- 模拟红色印章 -->
+        </view>
+        <view class="brand-info">
+          <text class="shop-status">营业中</text>
+          <text class="shop-distance">距您 800m</text>
+        </view>
+        <view class="brand-tags">
+          <text class="tag">现熬高汤</text>
+          <text class="divider">·</text>
+          <text class="tag">传统砂锅</text>
+        </view>
+      </view>
+      <view class="brand-right-logo">
+        <text class="logo-emoji">🌿</text>
+      </view>
+    </view>
+
+    <!-- 悬浮搜索框 -->
+    <view class="search-box-glass">
+      <text class="search-icon">🔍</text>
+      <swiper class="search-swiper" autoplay vertical circular interval="3000">
+        <swiper-item><view class="placeholder-text">试试“酸汤砂锅粉”</view></swiper-item>
+        <swiper-item><view class="placeholder-text">招牌“红烧牛肉面”</view></swiper-item>
+      </swiper>
+      <view class="search-btn">搜索</view>
+    </view>
   </view>
-  
-  <view class="menu-notice">
-    系统正在搭建中，敬请期待...
+
+  <!-- 主体内容：左侧分类 + 右侧商品 -->
+  <view class="main-content">
+    <!-- 左侧分类导航 -->
+    <scroll-view class="category-nav" scroll-y enhanced show-scrollbar="{{false}}">
+      <view 
+        class="category-item {{currentCategory === index ? 'active' : ''}}"
+        wx:for="{{categories}}"
+        wx:key="id"
+        bindtap="onCategoryTap"
+        data-index="{{index}}"
+      >
+        <text class="category-name">{{item.name}}</text>
+      </view>
+    </scroll-view>
+
+    <!-- 右侧商品列表 -->
+    <scroll-view 
+      class="goods-list" 
+      scroll-y 
+      enhanced 
+      show-scrollbar="{{false}}"
+      scroll-into-view="{{scrollIntoView}}"
+    >
+      <view 
+        class="goods-section" 
+        wx:for="{{categories}}" 
+        wx:key="id"
+        id="category-{{index}}"
+      >
+        <view class="section-title">{{item.name}}</view>
+        <view class="goods-item" wx:for="{{item.goods}}" wx:for-item="goods" wx:key="id">
+          <image class="goods-image" src="{{goods.image}}" mode="aspectFill" lazy-load></image>
+          <view class="goods-info">
+            <view>
+              <view class="goods-name">{{goods.name}}</view>
+              <view class="goods-desc">{{goods.desc}}</view>
+            </view>
+            <view class="goods-bottom">
+              <view class="goods-price">
+                <text class="price-symbol">¥</text>
+                <text class="price-value">{{goods.price}}</text>
+              </view>
+              <view class="goods-actions">
+                <view class="add-cart-btn" wx:if="{{goods.quantity === 0}}" catchtap="onPlus" data-goods="{{goods}}">
+                  <text class="add-cart-icon">🛒</text>
+                  <text>加入购物</text>
+                </view>
+                <view class="quantity-control" wx:else>
+                  <view class="action-btn minus" catchtap="onMinus" data-goods="{{goods}}">-</view>
+                  <text class="quantity">{{goods.quantity}}</text>
+                  <view class="action-btn plus" catchtap="onPlus" data-goods="{{goods}}">+</view>
+                </view>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </scroll-view>
+  </view>
+
+  <!-- 遮罩层 -->
+  <view class="cart-mask {{showCartDetail ? 'show' : ''}}" bindtap="hideCartDetail"></view>
+
+  <!-- 购物车详情弹窗 -->
+  <view class="cart-popup {{showCartDetail && cartCount > 0 ? 'show' : ''}}">
+    <view class="popup-header">
+      <text class="popup-title">已选商品</text>
+      <view class="clear-cart" bindtap="onClearCart">
+        <text style="margin-right: 6rpx;">🗑️</text>
+        <text>清空购物车</text>
+      </view>
+    </view>
+    <scroll-view class="popup-list" scroll-y>
+      <block wx:for="{{categories}}" wx:key="id" wx:for-item="category">
+        <block wx:for="{{category.goods}}" wx:key="id" wx:for-item="item">
+          <view class="cart-item" wx:if="{{item.quantity > 0}}">
+            <view class="cart-item-info">
+              <view class="cart-item-name">{{item.name}}</view>
+            </view>
+            <view class="cart-item-price">¥{{item.price * item.quantity}}</view>
+            <view class="quantity-control" style="background: var(--primary-green); padding: 4rpx 12rpx;">
+              <view class="action-btn minus" style="font-size: 28rpx;" catchtap="onMinus" data-goods="{{item}}">-</view>
+              <text class="quantity" style="font-size: 24rpx; margin: 0 10rpx;">{{item.quantity}}</text>
+              <view class="action-btn plus" style="font-size: 28rpx;" catchtap="onPlus" data-goods="{{item}}">+</view>
+            </view>
+          </view>
+        </block>
+      </block>
+    </scroll-view>
+    <view class="popup-footer"></view>
+  </view>
+
+  <!-- 浮动结算栏 (仅在有商品时显示) -->
+  <view class="float-cart-bar {{cartCount > 0 ? 'show' : ''}}">
+    <view class="cart-content" bindtap="showCartDetail">
+      <view class="cart-icon-box">
+        <text class="cart-emoji">🛒</text>
+        <view class="cart-count-badge">{{cartCount}}</view>
+      </view>
+      <view class="cart-price-info">
+        <view class="price-row">
+          <text class="symbol">¥</text>
+          <text class="total-price">{{cartTotal}}</text>
+        </view>
+        <text class="delivery-tip">预估满¥20起送</text>
+      </view>
+      <view class="checkout-btn" catchtap="goCheckout">
+        去结算
+      </view>
+    </view>
   </view>
 </view>
