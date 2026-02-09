@@ -26,26 +26,39 @@ Page({
     },
 
     loadOrders: function () {
-        const orders = wx.getStorageSync('localOrders') || [];
+        wx.showLoading({ title: '加载中...' });
+        wx.cloud.callFunction({
+            name: 'getOrders',
+            data: { role: 'admin' },
+            success: (res) => {
+                wx.hideLoading();
+                const result = res.result;
+                if (result && result.success) {
+                    const orders = result.data.map(o => ({
+                        ...o,
+                        totalAmount: o.totalAmount || o.totalFee || 0,
+                        createTime: o.createTimeStr || o.createTime
+                    }));
 
-        // 兼容旧字段名 totalFee → totalAmount
-        orders.forEach(o => {
-            if (o.totalAmount === undefined && o.totalFee !== undefined) {
-                o.totalAmount = o.totalFee;
+                    const tabs = this.data.tabs.map(tab => {
+                        if (tab.status === -99) {
+                            tab.count = orders.length;
+                        } else {
+                            tab.count = orders.filter(o => o.status === tab.status).length;
+                        }
+                        return tab;
+                    });
+
+                    this.setData({ allOrders: orders, tabs });
+                    this.filterOrders();
+                }
+            },
+            fail: (err) => {
+                wx.hideLoading();
+                console.error('获取订单失败:', err);
+                wx.showToast({ title: '加载失败', icon: 'none' });
             }
         });
-
-        const tabs = this.data.tabs.map(tab => {
-            if (tab.status === -99) {
-                tab.count = orders.length;
-            } else {
-                tab.count = orders.filter(o => o.status === tab.status).length;
-            }
-            return tab;
-        });
-
-        this.setData({ allOrders: orders, tabs });
-        this.filterOrders();
     },
 
     filterOrders: function () {
@@ -105,16 +118,24 @@ Page({
     },
 
     updateStatus: function (orderId, status, statusText) {
-        const orders = wx.getStorageSync('localOrders') || [];
-        const order = orders.find(o => o.orderId === orderId);
-        if (order) {
-            order.status = status;
-            order.statusText = statusText;
-            if (status === 2) order.acceptTime = new Date().toLocaleString('zh-CN');
-            if (status === 3) order.deliveredTime = new Date().toLocaleString('zh-CN');
-            if (status === 4) order.completeTime = new Date().toLocaleString('zh-CN');
-            wx.setStorageSync('localOrders', orders);
-            this.loadOrders();
-        }
+        wx.showLoading({ title: '更新中...' });
+        wx.cloud.callFunction({
+            name: 'updateOrder',
+            data: { orderId, status },
+            success: (res) => {
+                wx.hideLoading();
+                const result = res.result;
+                if (result && result.success) {
+                    this.loadOrders();
+                } else {
+                    wx.showToast({ title: result ? result.message : '更新失败', icon: 'none' });
+                }
+            },
+            fail: (err) => {
+                wx.hideLoading();
+                console.error('更新订单失败:', err);
+                wx.showToast({ title: '网络异常', icon: 'none' });
+            }
+        });
     }
 });

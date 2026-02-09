@@ -23,50 +23,57 @@ Page({
     },
 
     loadData: function () {
-        const orders = wx.getStorageSync('localOrders') || [];
+        wx.showLoading({ title: '加载中...' });
+        wx.cloud.callFunction({
+            name: 'getOrders',
+            data: { role: 'admin' },
+            success: (res) => {
+                wx.hideLoading();
+                const result = res.result;
+                if (!result || !result.success) return;
 
-        // 兼容旧字段名 totalFee → totalAmount
-        orders.forEach(o => {
-            if (o.totalAmount === undefined && o.totalFee !== undefined) {
-                o.totalAmount = o.totalFee;
-            }
-        });
+                const orders = result.data.map(o => ({
+                    ...o,
+                    totalAmount: o.totalAmount || o.totalFee || 0,
+                    createTime: o.createTimeStr || o.createTime
+                }));
 
-        const today = new Date().toLocaleDateString('zh-CN');
+                const today = new Date().toLocaleDateString('zh-CN');
+                const todayOrders = orders.filter(o => {
+                    const d = o.createTime ? new Date(o.createTime).toLocaleDateString('zh-CN') : '';
+                    return d === today;
+                });
 
-        // 今日订单
-        const todayOrders = orders.filter(o => {
-            const orderDate = new Date(o.createTime).toLocaleDateString('zh-CN');
-            return orderDate === today;
-        });
+                const pendingOrders = orders.filter(o => o.status === 0 || o.status === 1).map(o => ({
+                    ...o,
+                    statusText: o.status === 0 ? '待支付' : '待确认'
+                }));
 
-        // 待处理（status=0 待支付 或 status=1 待确认）
-        const pendingOrders = orders.filter(o => o.status === 0 || o.status === 1).map(o => ({
-            ...o,
-            statusText: o.status === 0 ? '待支付' : '待确认'
-        }));
+                const completedOrders = todayOrders
+                    .filter(o => o.status === 4 || o.status === 3)
+                    .map(o => ({
+                        ...o,
+                        itemsSummary: (o.items || []).map(i => i.name).join('、')
+                    }));
 
-        // 已完成
-        const completedOrders = todayOrders
-            .filter(o => o.status === 4 || o.status === 3)
-            .map(o => ({
-                ...o,
-                itemsSummary: (o.items || []).map(i => i.name).join('、')
-            }));
+                const todayRevenue = todayOrders
+                    .filter(o => o.status >= 1)
+                    .reduce((sum, o) => sum + (o.totalAmount || 0), 0);
 
-        // 今日营收
-        const todayRevenue = todayOrders
-            .filter(o => o.status >= 1)
-            .reduce((sum, o) => sum + (o.totalAmount || 0), 0);
-
-        this.setData({
-            stats: {
-                todayOrders: todayOrders.length,
-                todayRevenue,
-                pendingOrders: pendingOrders.length
+                this.setData({
+                    stats: {
+                        todayOrders: todayOrders.length,
+                        todayRevenue,
+                        pendingOrders: pendingOrders.length
+                    },
+                    pendingOrders,
+                    completedOrders
+                });
             },
-            pendingOrders,
-            completedOrders
+            fail: (err) => {
+                wx.hideLoading();
+                console.error('加载数据失败:', err);
+            }
         });
     },
 
@@ -94,14 +101,19 @@ Page({
 
     // 更新订单状态
     updateOrderStatus: function (orderId, status, statusText) {
-        const orders = wx.getStorageSync('localOrders') || [];
-        const order = orders.find(o => o.orderId === orderId);
-        if (order) {
-            order.status = status;
-            order.statusText = statusText;
-            wx.setStorageSync('localOrders', orders);
-            this.loadData();
-        }
+        wx.cloud.callFunction({
+            name: 'updateOrder',
+            data: { orderId, status },
+            success: (res) => {
+                const result = res.result;
+                if (result && result.success) {
+                    this.loadData();
+                }
+            },
+            fail: (err) => {
+                console.error('更新订单失败:', err);
+            }
+        });
     },
 
     goOrderManage: function () {

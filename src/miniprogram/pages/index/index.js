@@ -1,5 +1,7 @@
 // pages/index/index.js
-// 一味鲜 - 点餐首页（纯中文版）
+// 一味鲜 - 点餐首页（云数据库版）
+const db = wx.cloud.database()
+
 Page({
     data: {
         currentCategory: 0,
@@ -7,177 +9,88 @@ Page({
         cartTotal: 0,
         cartCount: 0,
         showCartDetail: false,
-        categories: [
-            {
-                id: 'cat_1',
-                name: '砂锅粉',
-                goods: [
-                    {
-                        id: 'g001',
-                        name: '酸汤砂锅粉',
-                        desc: '酸爽开胃，汤底浓郁',
-                        price: 10,
-                        image: 'https://picsum.photos/seed/noodle1/300/300',
-                        quantity: 0,
-                        hasSpecs: true,
-                        specs: [
-                            { name: '卤蛋', price: 2, checked: false },
-                            { name: '瘦肉', price: 3, checked: false },
-                            { name: '肥肠', price: 5, checked: false },
-                            { name: '猪脚', price: 6, checked: false },
-                            { name: '豆腐泡', price: 2, checked: false }
-                        ]
-                    },
-                    {
-                        id: 'g002',
-                        name: '麻辣砂锅粉',
-                        desc: '麻辣鲜香，过瘾解馋',
-                        price: 10,
-                        image: 'https://picsum.photos/seed/noodle2/300/300',
-                        quantity: 0,
-                        hasSpecs: true,
-                        specs: [
-                            { name: '卤蛋', price: 2, checked: false },
-                            { name: '瘦肉', price: 3, checked: false },
-                            { name: '肥肠', price: 5, checked: false },
-                            { name: '猪脚', price: 6, checked: false },
-                            { name: '豆腐泡', price: 2, checked: false }
-                        ]
-                    },
-                    {
-                        id: 'g003',
-                        name: '香菇鸡肉砂锅粉',
-                        desc: '鸡肉嫩滑，香菇鲜美',
-                        price: 10,
-                        image: 'https://picsum.photos/seed/noodle3/300/300',
-                        quantity: 0,
-                        hasSpecs: true,
-                        specs: [
-                            { name: '卤蛋', price: 2, checked: false },
-                            { name: '瘦肉', price: 3, checked: false },
-                            { name: '肥肠', price: 5, checked: false },
-                            { name: '猪脚', price: 6, checked: false },
-                            { name: '豆腐泡', price: 2, checked: false }
-                        ]
-                    },
-                    {
-                        id: 'g004',
-                        name: '牛腩砂锅粉',
-                        desc: '牛腩软烂，入口即化',
-                        price: 10,
-                        image: 'https://picsum.photos/seed/noodle4/300/300',
-                        quantity: 0,
-                        hasSpecs: true,
-                        specs: [
-                            { name: '卤蛋', price: 2, checked: false },
-                            { name: '瘦肉', price: 3, checked: false },
-                            { name: '肥肠', price: 5, checked: false },
-                            { name: '猪脚', price: 6, checked: false },
-                            { name: '豆腐泡', price: 2, checked: false }
-                        ]
-                    }
-                ]
-            },
-            {
-                id: 'cat_2',
-                name: '砂锅粥',
-                goods: [
-                    {
-                        id: 'g005',
-                        name: '砂锅鸡粥',
-                        desc: '鸡肉嫩滑，粥底绵密',
-                        price: 10,
-                        image: 'https://picsum.photos/seed/porridge1/300/300',
-                        quantity: 0,
-                        hasSpecs: true,
-                        specs: [
-                            { name: '加蛋', price: 2, checked: false },
-                            { name: '加青菜', price: 1, checked: false },
-                            { name: '加虾', price: 5, checked: false }
-                        ]
-                    },
-                    {
-                        id: 'g006',
-                        name: '砂锅鱼片粥',
-                        desc: '鱼片鲜嫩，营养丰富',
-                        price: 10,
-                        image: 'https://picsum.photos/seed/porridge2/300/300',
-                        quantity: 0,
-                        hasSpecs: true,
-                        specs: [
-                            { name: '加蛋', price: 2, checked: false },
-                            { name: '加青菜', price: 1, checked: false },
-                            { name: '加虾', price: 5, checked: false }
-                        ]
-                    },
-                    {
-                        id: 'g007',
-                        name: '皮蛋瘦肉粥',
-                        desc: '经典口味，老少皆宜',
-                        price: 10,
-                        image: 'https://picsum.photos/seed/porridge3/300/300',
-                        quantity: 0,
-                        hasSpecs: true,
-                        specs: [
-                            { name: '加蛋', price: 2, checked: false },
-                            { name: '加青菜', price: 1, checked: false },
-                            { name: '加虾', price: 5, checked: false }
-                        ]
-                    }
-                ]
-            },
-            {
-                id: 'cat_3',
-                name: '特色小吃',
-                goods: [
-                    {
-                        id: 'g008',
-                        name: '特色水晶鸡',
-                        desc: '皮脆肉嫩，晶莹剔透',
-                        price: 10,
-                        image: 'https://picsum.photos/seed/chicken1/300/300',
-                        quantity: 0,
-                        hasSpecs: false
-                    },
-                    {
-                        id: 'g009',
-                        name: '香辣鸭中翅',
-                        desc: '香辣可口，下饭神器',
-                        price: 10,
-                        image: 'https://picsum.photos/seed/wings1/300/300',
-                        quantity: 0,
-                        hasSpecs: false
-                    }
-                ]
-            },
-            {
-                id: 'cat_4',
-                name: '饮品',
-                goods: [
-                    {
-                        id: 'g010',
-                        name: '凉茶',
-                        desc: '清热解暑',
-                        price: 10,
-                        image: 'https://picsum.photos/seed/tea1/300/300',
-                        quantity: 0,
-                        hasSpecs: false
-                    },
-                    {
-                        id: 'g011',
-                        name: '柠檬水',
-                        desc: '酸甜可口',
-                        price: 10,
-                        image: 'https://picsum.photos/seed/lemon1/300/300',
-                        quantity: 0,
-                        hasSpecs: false
-                    }
-                ]
-            }
-        ]
+        categories: [],
+        loading: true
     },
 
-    onLoad: function (options) { },
+    onLoad: function (options) {
+        this.loadGoodsFromCloud();
+    },
+
+    // 从云数据库加载商品数据
+    loadGoodsFromCloud: function () {
+        this.setData({ loading: true });
+
+        Promise.all([
+            db.collection('categories').orderBy('sort', 'asc').get(),
+            db.collection('goods').where({ onSale: true }).orderBy('sort', 'asc').get()
+        ]).then(([catRes, goodsRes]) => {
+            const categories = catRes.data.map(cat => ({
+                id: cat.catId,
+                name: cat.name,
+                goods: goodsRes.data
+                    .filter(g => g.catId === cat.catId)
+                    .map(g => ({
+                        id: g.goodsId,
+                        _id: g._id,
+                        name: g.name,
+                        desc: g.desc,
+                        price: g.price,
+                        image: g.image,
+                        hasSpecs: g.hasSpecs || false,
+                        specs: (g.specs || []).map(s => ({ ...s, checked: false })),
+                        quantity: 0,
+                        selectedSpecs: [],
+                        specDesc: '',
+                        extraFee: 0
+                    }))
+            }));
+
+            this.setData({ categories, loading: false });
+            console.log('[loadGoods] 云端加载成功，分类:', categories.length, '商品:', goodsRes.data.length);
+        }).catch(err => {
+            console.error('[loadGoods] 云端加载失败，使用本地备份', err);
+            this.loadLocalFallback();
+        });
+    },
+
+    // 云端加载失败时的本地降级方案
+    loadLocalFallback: function () {
+        const categories = [
+            {
+                id: 'cat_1', name: '砂锅粉',
+                goods: [
+                    { id: 'g001', name: '酸汤砂锅粉', desc: '酸爽开胃，汤底浓郁', price: 10, image: 'https://picsum.photos/seed/noodle1/300/300', quantity: 0, hasSpecs: true, specs: [{ name: '卤蛋', price: 2, checked: false }, { name: '瘦肉', price: 3, checked: false }, { name: '肥肠', price: 5, checked: false }, { name: '猪脚', price: 6, checked: false }, { name: '豆腐泡', price: 2, checked: false }] },
+                    { id: 'g002', name: '麻辣砂锅粉', desc: '麻辣鲜香，过瘾解馋', price: 10, image: 'https://picsum.photos/seed/noodle2/300/300', quantity: 0, hasSpecs: true, specs: [{ name: '卤蛋', price: 2, checked: false }, { name: '瘦肉', price: 3, checked: false }, { name: '肥肠', price: 5, checked: false }, { name: '猪脚', price: 6, checked: false }, { name: '豆腐泡', price: 2, checked: false }] },
+                    { id: 'g003', name: '香菇鸡肉砂锅粉', desc: '鸡肉嫩滑，香菇鲜美', price: 10, image: 'https://picsum.photos/seed/noodle3/300/300', quantity: 0, hasSpecs: true, specs: [{ name: '卤蛋', price: 2, checked: false }, { name: '瘦肉', price: 3, checked: false }, { name: '肥肠', price: 5, checked: false }, { name: '猪脚', price: 6, checked: false }, { name: '豆腐泡', price: 2, checked: false }] },
+                    { id: 'g004', name: '牛腩砂锅粉', desc: '牛腩软烂，入口即化', price: 10, image: 'https://picsum.photos/seed/noodle4/300/300', quantity: 0, hasSpecs: true, specs: [{ name: '卤蛋', price: 2, checked: false }, { name: '瘦肉', price: 3, checked: false }, { name: '肥肠', price: 5, checked: false }, { name: '猪脚', price: 6, checked: false }, { name: '豆腐泡', price: 2, checked: false }] }
+                ]
+            },
+            {
+                id: 'cat_2', name: '砂锅粥',
+                goods: [
+                    { id: 'g005', name: '砂锅鸡粥', desc: '鸡肉嫩滑，粥底绵密', price: 10, image: 'https://picsum.photos/seed/porridge1/300/300', quantity: 0, hasSpecs: true, specs: [{ name: '加蛋', price: 2, checked: false }, { name: '加青菜', price: 1, checked: false }, { name: '加虾', price: 5, checked: false }] },
+                    { id: 'g006', name: '砂锅鱼片粥', desc: '鱼片鲜嫩，营养丰富', price: 10, image: 'https://picsum.photos/seed/porridge2/300/300', quantity: 0, hasSpecs: true, specs: [{ name: '加蛋', price: 2, checked: false }, { name: '加青菜', price: 1, checked: false }, { name: '加虾', price: 5, checked: false }] },
+                    { id: 'g007', name: '皮蛋瘦肉粥', desc: '经典口味，老少皆宜', price: 10, image: 'https://picsum.photos/seed/porridge3/300/300', quantity: 0, hasSpecs: true, specs: [{ name: '加蛋', price: 2, checked: false }, { name: '加青菜', price: 1, checked: false }, { name: '加虾', price: 5, checked: false }] }
+                ]
+            },
+            {
+                id: 'cat_3', name: '特色小吃',
+                goods: [
+                    { id: 'g008', name: '特色水晶鸡', desc: '皮脆肉嫩，晶莹剔透', price: 10, image: 'https://picsum.photos/seed/chicken1/300/300', quantity: 0, hasSpecs: false },
+                    { id: 'g009', name: '香辣鸭中翅', desc: '香辣可口，下饭神器', price: 10, image: 'https://picsum.photos/seed/wings1/300/300', quantity: 0, hasSpecs: false }
+                ]
+            },
+            {
+                id: 'cat_4', name: '饮品',
+                goods: [
+                    { id: 'g010', name: '凉茶', desc: '清热解暑', price: 10, image: 'https://picsum.photos/seed/tea1/300/300', quantity: 0, hasSpecs: false },
+                    { id: 'g011', name: '柠檬水', desc: '酸甜可口', price: 10, image: 'https://picsum.photos/seed/lemon1/300/300', quantity: 0, hasSpecs: false }
+                ]
+            }
+        ];
+        this.setData({ categories, loading: false });
+    },
 
     // 点击商品进入详情页
     onGoodsTap: function (e) {

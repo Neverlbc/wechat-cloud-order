@@ -22,19 +22,38 @@ Page({
     },
 
     loadOrders: function () {
-        // TODO: 后续从云数据库读取
-        // 当前从本地缓存读取
-        const orders = wx.getStorageSync('localOrders') || [];
-
-        // 兼容旧字段名 totalFee → totalAmount
-        orders.forEach(o => {
-            if (o.totalAmount === undefined && o.totalFee !== undefined) {
-                o.totalAmount = o.totalFee;
+        wx.showLoading({ title: '加载中...' });
+        wx.cloud.callFunction({
+            name: 'getOrders',
+            data: { role: 'user' },
+            success: (res) => {
+                wx.hideLoading();
+                const result = res.result;
+                if (result && result.success) {
+                    // 处理时间显示
+                    const orders = result.data.map(o => ({
+                        ...o,
+                        totalAmount: o.totalAmount || o.totalFee || 0,
+                        createTime: o.createTimeStr || o.createTime
+                    }));
+                    this.setData({ orders });
+                    this.filterOrders();
+                }
+            },
+            fail: (err) => {
+                wx.hideLoading();
+                console.error('获取订单失败:', err);
+                // 降级读本地缓存
+                const orders = wx.getStorageSync('localOrders') || [];
+                orders.forEach(o => {
+                    if (o.totalAmount === undefined && o.totalFee !== undefined) {
+                        o.totalAmount = o.totalFee;
+                    }
+                });
+                this.setData({ orders });
+                this.filterOrders();
             }
         });
-
-        this.setData({ orders });
-        this.filterOrders();
     },
 
     onTabChange: function (e) {

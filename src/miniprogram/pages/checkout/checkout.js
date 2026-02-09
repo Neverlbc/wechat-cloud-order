@@ -155,51 +155,46 @@ Page({
 
         wx.showLoading({ title: '提交中...' });
 
-        // 构建订单数据（后续对接云函数）
-        const orderData = {
-            items: this.data.cartItems,
-            totalAmount: this.data.totalAmount,
-            deliveryType: this.data.deliveryType,
-            deliveryFee: this.data.deliveryFee,
-            packingFee: this.data.packingFee,
-            address: this.data.address,
-            remark: this.data.remark,
-            status: 0, // 待支付
-            createTime: new Date()
-        };
+        // 通过云函数创建订单
+        wx.cloud.callFunction({
+            name: 'createOrder',
+            data: {
+                items: this.data.cartItems,
+                totalAmount: this.data.totalAmount,
+                deliveryType: this.data.deliveryType,
+                deliveryFee: this.data.deliveryFee,
+                packingFee: this.data.packingFee,
+                address: this.data.address,
+                remark: this.data.remark
+            },
+            success: (res) => {
+                wx.hideLoading();
+                const result = res.result;
 
-        // TODO: 对接云函数创建订单 + 微信支付
-        // wx.cloud.callFunction({
-        //     name: 'createOrder',
-        //     data: orderData,
-        //     success: res => { ... }
-        // });
+                if (result && result.success) {
+                    // 清空购物车缓存
+                    wx.removeStorageSync('cartItems');
+                    wx.removeStorageSync('cartTotal');
 
-        // 模拟下单成功
-        setTimeout(() => {
-            wx.hideLoading();
-
-            // 存储订单到本地（临时方案，后续换成云数据库）
-            const orders = wx.getStorageSync('localOrders') || [];
-            orderData.orderId = 'ORD' + Date.now();
-            orderData.statusText = '待支付';
-            orders.unshift(orderData);
-            wx.setStorageSync('localOrders', orders);
-
-            // 清空购物车缓存
-            wx.removeStorageSync('cartItems');
-            wx.removeStorageSync('cartTotal');
-
-            wx.showTabBar({ animation: false });
-            wx.showModal({
-                title: '下单成功 🎉',
-                content: '订单号：' + orderData.orderId,
-                showCancel: false,
-                confirmText: '查看订单',
-                success: () => {
-                    wx.switchTab({ url: '/pages/order/order' });
+                    wx.showTabBar({ animation: false });
+                    wx.showModal({
+                        title: '下单成功 🎉',
+                        content: '订单号：' + result.orderId,
+                        showCancel: false,
+                        confirmText: '查看订单',
+                        success: () => {
+                            wx.switchTab({ url: '/pages/order/order' });
+                        }
+                    });
+                } else {
+                    wx.showToast({ title: result ? result.message : '下单失败', icon: 'none' });
                 }
-            });
-        }, 800);
+            },
+            fail: (err) => {
+                wx.hideLoading();
+                console.error('云函数调用失败:', err);
+                wx.showToast({ title: '网络异常，请重试', icon: 'none' });
+            }
+        });
     }
 });
