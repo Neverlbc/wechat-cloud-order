@@ -26,10 +26,15 @@
             </view>
           </view>
           <text class="goods-desc">{{item.desc}}</text>
-          <view class="goods-specs" wx:if="{{item.hasSpecs}}">
-            <text class="spec-chip" wx:for="{{item.specs}}" wx:for-item="spec" wx:key="name">
-              {{spec.name}} +¥{{spec.price}}
-            </text>
+          <view class="goods-specs-row">
+            <view class="goods-specs" wx:if="{{item.hasSpecs}}">
+              <text class="spec-chip" wx:for="{{item.specs}}" wx:for-item="spec" wx:key="name">
+                {{spec.name}} +¥{{spec.price}}
+              </text>
+            </view>
+            <view class="op-spec" catchtap="onEditSpecs" data-id="{{item.id}}">
+              {{item.hasSpecs ? '编辑加料' : '+ 加料'}}
+            </view>
           </view>
           <view class="goods-bottom">
             <view class="price-box">
@@ -89,6 +94,39 @@
       </view>
 
       <view class="form-item">
+        <text class="form-label">菜品图片</text>
+        <view class="image-picker">
+          <view class="image-preview" wx:if="{{tempImagePath}}">
+            <image src="{{tempImagePath}}" mode="aspectFill" class="preview-img"></image>
+            <view class="image-remove" catchtap="onRemoveImage">✕</view>
+          </view>
+          <view class="image-add" wx:else bindtap="onChooseImage">
+            <text class="image-add-icon">📷</text>
+            <text class="image-add-text">拍照/相册</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 加料管理 -->
+      <view class="form-item">
+        <view class="form-label-row">
+          <text class="form-label">加料（可选）</text>
+          <view class="spec-add-btn" bindtap="onAddNewSpec">+ 添加</view>
+        </view>
+        <view class="spec-edit-list" wx:if="{{newSpecs.length > 0}}">
+          <view class="spec-edit-row" wx:for="{{newSpecs}}" wx:key="index">
+            <input class="spec-name-input" placeholder="名称" value="{{item.name}}" bindinput="onNewSpecNameInput" data-idx="{{index}}" />
+            <input class="spec-price-input" type="digit" placeholder="加价" value="{{item.price}}" bindinput="onNewSpecPriceInput" data-idx="{{index}}" />
+            <text class="spec-price-unit">元</text>
+            <view class="spec-remove-btn" catchtap="onRemoveNewSpec" data-idx="{{index}}">✕</view>
+          </view>
+        </view>
+        <view class="spec-empty" wx:else>
+          <text>点击“+ 添加”来设置加料项</text>
+        </view>
+      </view>
+
+      <view class="form-item">
         <text class="form-label">所属分类</text>
         <picker mode="selector" range="{{categories}}" range-key="name" bindchange="onNewCatChange">
           <view class="form-picker">
@@ -107,6 +145,38 @@
     <view class="form-footer">
       <view class="form-btn cancel" bindtap="onHideAddForm">取消</view>
       <view class="form-btn confirm" bindtap="onSubmitAdd">确认新增</view>
+    </view>
+  </view>
+
+  <!-- 编辑加料弹窗（已有菜品） -->
+  <view class="form-mask {{showSpecEditor ? 'show' : ''}}" bindtap="onHideSpecEditor"></view>
+  <view class="form-popup {{showSpecEditor ? 'show' : ''}}">
+    <view class="form-header">
+      <text class="form-title">{{editingGoodsName}} - 加料管理</text>
+      <view class="form-close" bindtap="onHideSpecEditor">✕</view>
+    </view>
+
+    <view class="form-body">
+      <view class="spec-edit-list" wx:if="{{editSpecs.length > 0}}">
+        <view class="spec-edit-row" wx:for="{{editSpecs}}" wx:key="index">
+          <input class="spec-name-input" placeholder="加料名称" value="{{item.name}}" bindinput="onEditSpecNameInput" data-idx="{{index}}" />
+          <input class="spec-price-input" type="digit" placeholder="加价" value="{{item.price}}" bindinput="onEditSpecPriceInput" data-idx="{{index}}" />
+          <text class="spec-price-unit">元</text>
+          <view class="spec-remove-btn" catchtap="onRemoveEditSpec" data-idx="{{index}}">✕</view>
+        </view>
+      </view>
+      <view class="spec-empty" wx:else>
+        <text>暂无加料，点击下方添加</text>
+      </view>
+      <view class="spec-add-row" bindtap="onAddEditSpec">
+        <text class="spec-add-icon">+</text>
+        <text>添加加料项</text>
+      </view>
+    </view>
+
+    <view class="form-footer">
+      <view class="form-btn cancel" bindtap="onHideSpecEditor">取消</view>
+      <view class="form-btn confirm" bindtap="onSaveSpecs">保存</view>
     </view>
   </view>
 

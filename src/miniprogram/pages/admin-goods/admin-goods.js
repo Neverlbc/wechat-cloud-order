@@ -15,7 +15,15 @@ Page({
             desc: '',
             price: '',
             catId: ''
-        }
+        },
+        tempImagePath: '',
+        // 新增时的加料列表
+        newSpecs: [],
+        // 编辑加料弹窗
+        showSpecEditor: false,
+        editingGoodsId: '',
+        editingGoodsName: '',
+        editSpecs: []
     },
 
     onShow: function () {
@@ -81,6 +89,8 @@ Page({
         const catId = this.data.categories[this.data.currentCat]?.id || '';
         this.setData({
             showAddForm: true,
+            tempImagePath: '',
+            newSpecs: [],
             newGoods: { name: '', desc: '', price: '', catId: catId }
         });
     },
@@ -106,6 +116,126 @@ Page({
         this.setData({ 'newGoods.catId': this.data.categories[idx].id });
     },
 
+    // ========== 新增表单 - 加料管理 ==========
+    onAddNewSpec: function () {
+        const specs = this.data.newSpecs;
+        specs.push({ name: '', price: '' });
+        this.setData({ newSpecs: specs });
+    },
+
+    onNewSpecNameInput: function (e) {
+        const idx = e.currentTarget.dataset.idx;
+        this.setData({ ['newSpecs[' + idx + '].name']: e.detail.value });
+    },
+
+    onNewSpecPriceInput: function (e) {
+        const idx = e.currentTarget.dataset.idx;
+        this.setData({ ['newSpecs[' + idx + '].price']: e.detail.value });
+    },
+
+    onRemoveNewSpec: function (e) {
+        const idx = e.currentTarget.dataset.idx;
+        const specs = this.data.newSpecs;
+        specs.splice(idx, 1);
+        this.setData({ newSpecs: specs });
+    },
+
+    // ========== 已有菜品 - 编辑加料 ==========
+    onEditSpecs: function (e) {
+        const id = e.currentTarget.dataset.id;
+        const goods = this.data.allGoods.find(g => g.id === id);
+        if (!goods) return;
+
+        const editSpecs = (goods.specs || []).map(s => ({ name: s.name, price: String(s.price) }));
+        this.setData({
+            showSpecEditor: true,
+            editingGoodsId: id,
+            editingGoodsName: goods.name,
+            editSpecs: editSpecs
+        });
+    },
+
+    onHideSpecEditor: function () {
+        this.setData({ showSpecEditor: false });
+    },
+
+    onAddEditSpec: function () {
+        const specs = this.data.editSpecs;
+        specs.push({ name: '', price: '' });
+        this.setData({ editSpecs: specs });
+    },
+
+    onEditSpecNameInput: function (e) {
+        const idx = e.currentTarget.dataset.idx;
+        this.setData({ ['editSpecs[' + idx + '].name']: e.detail.value });
+    },
+
+    onEditSpecPriceInput: function (e) {
+        const idx = e.currentTarget.dataset.idx;
+        this.setData({ ['editSpecs[' + idx + '].price']: e.detail.value });
+    },
+
+    onRemoveEditSpec: function (e) {
+        const idx = e.currentTarget.dataset.idx;
+        const specs = this.data.editSpecs;
+        specs.splice(idx, 1);
+        this.setData({ editSpecs: specs });
+    },
+
+    onSaveSpecs: function () {
+        const specs = this.data.editSpecs
+            .filter(s => s.name && s.name.trim())
+            .map(s => ({ name: s.name.trim(), price: parseFloat(s.price) || 0 }));
+
+        wx.showLoading({ title: '保存中...' });
+        this._callUpdateGoods({
+            goodsId: this.data.editingGoodsId,
+            updateData: {
+                specs: specs,
+                hasSpecs: specs.length > 0
+            }
+        }).then(res => {
+            wx.hideLoading();
+            if (res.result && res.result.success) {
+                wx.showToast({ title: '加料已更新', icon: 'success' });
+                this.setData({ showSpecEditor: false });
+                this.loadGoods();
+            } else {
+                wx.showToast({ title: '保存失败', icon: 'none' });
+            }
+        }).catch(err => {
+            wx.hideLoading();
+            wx.showToast({ title: '操作失败', icon: 'none' });
+        });
+    },
+
+    // 选择图片
+    onChooseImage: function () {
+        wx.chooseMedia({
+            count: 1,
+            mediaType: ['image'],
+            sourceType: ['album', 'camera'],
+            success: (res) => {
+                this.setData({ tempImagePath: res.tempFiles[0].tempFilePath });
+            }
+        });
+    },
+
+    // 删除已选图片
+    onRemoveImage: function () {
+        this.setData({ tempImagePath: '' });
+    },
+
+    // 上传图片到云存储
+    _uploadImage: function (filePath) {
+        const ext = filePath.split('.').pop();
+        const cloudPath = 'goods/' + Date.now() + '-' + Math.random().toString(36).substr(2, 8) + '.' + ext;
+        return wx.cloud.uploadFile({
+            cloudPath: cloudPath,
+            filePath: filePath
+        });
+    },
+
     onSubmitAdd: function () {
         const { name, desc, price, catId } = this.data.newGoods;
         if (!name.trim()) {
@@ -118,28 +248,52 @@ Page({
         }
 
         wx.showLoading({ title: '新增中...' });
-        this._callUpdateGoods({
-            action: 'add',
-            goodsData: {
-                name: name.trim(),
-                desc: desc.trim(),
-                price: parseFloat(price),
-                catId: catId
-            }
-        }).then(res => {
-            wx.hideLoading();
-            if (res.result && res.result.success) {
-                wx.showToast({ title: '新增成功', icon: 'success' });
-                this.setData({ showAddForm: false });
-                this.loadGoods();
-            } else {
-                wx.showToast({ title: res.result?.message || '新增失败', icon: 'none' });
-            }
-        }).catch(err => {
-            wx.hideLoading();
-            console.error('新增失败:', err);
-            wx.showToast({ title: '操作失败', icon: 'none' });
-        });
+
+        // 处理加料
+        const specs = this.data.newSpecs
+            .filter(s => s.name && s.name.trim())
+            .map(s => ({ name: s.name.trim(), price: parseFloat(s.price) || 0 }));
+
+        const doAdd = (imageUrl) => {
+            this._callUpdateGoods({
+                action: 'add',
+                goodsData: {
+                    name: name.trim(),
+                    desc: desc.trim(),
+                    price: parseFloat(price),
+                    catId: catId,
+                    image: imageUrl,
+                    hasSpecs: specs.length > 0,
+                    specs: specs
+                }
+            }).then(res => {
+                wx.hideLoading();
+                if (res.result && res.result.success) {
+                    wx.showToast({ title: '新增成功', icon: 'success' });
+                    this.setData({ showAddForm: false, tempImagePath: '' });
+                    this.loadGoods();
+                } else {
+                    wx.showToast({ title: res.result?.message || '新增失败', icon: 'none' });
+                }
+            }).catch(err => {
+                wx.hideLoading();
+                console.error('新增失败:', err);
+                wx.showToast({ title: '操作失败', icon: 'none' });
+            });
+        };
+
+        // 有图片则先上传，无图片用默认
+        if (this.data.tempImagePath) {
+            this._uploadImage(this.data.tempImagePath).then(uploadRes => {
+                doAdd(uploadRes.fileID);
+            }).catch(err => {
+                wx.hideLoading();
+                console.error('图片上传失败:', err);
+                wx.showToast({ title: '图片上传失败', icon: 'none' });
+            });
+        } else {
+            doAdd('');
+        }
     },
 
     // ========== 删除菜品 ==========

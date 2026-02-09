@@ -25,8 +25,8 @@ exports.main = async (event) => {
         desc: goodsData.desc || '',
         price: parseFloat(goodsData.price) || 10,
         image: goodsData.image || 'https://picsum.photos/seed/' + newGoodsId + '/300/300',
-        hasSpecs: false,
-        specs: [],
+        hasSpecs: goodsData.hasSpecs || false,
+        specs: goodsData.specs || [],
         onSale: true,
         sort: countRes.total + 1
       }
@@ -71,7 +71,7 @@ exports.main = async (event) => {
   }
 
   // 只允许更新安全字段
-  const allowedFields = ['price', 'onSale', 'name', 'desc', 'image', 'sort']
+  const allowedFields = ['price', 'onSale', 'name', 'desc', 'image', 'sort', 'hasSpecs', 'specs']
   const safeData = {}
   for (const key of allowedFields) {
     if (updateData[key] !== undefined) {

@@ -377,3 +377,207 @@ page {
     color: #fff;
     box-shadow: 0 4rpx 16rpx rgba(74,124,89,0.3);
 }
+
+/* ===== 图片选择器 ===== */
+.image-picker {
+    display: flex;
+    margin-top: 12rpx;
+}
+
+.image-add {
+    width: 180rpx;
+    height: 180rpx;
+    background: #F7F7F7;
+    border-radius: 16rpx;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 2rpx dashed #DDD;
+    gap: 8rpx;
+}
+
+.image-add:active {
+    background: #F0F0F0;
+    border-color: #4A7C59;
+}
+
+.image-add-icon {
+    font-size: 48rpx;
+}
+
+.image-add-text {
+    font-size: 22rpx;
+    color: #AAA;
+}
+
+.image-preview {
+    position: relative;
+    width: 180rpx;
+    height: 180rpx;
+}
+
+.preview-img {
+    width: 180rpx;
+    height: 180rpx;
+    border-radius: 16rpx;
+}
+
+.image-remove {
+    position: absolute;
+    top: -12rpx;
+    right: -12rpx;
+    width: 40rpx;
+    height: 40rpx;
+    background: #EE4444;
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22rpx;
+    box-shadow: 0 2rpx 8rpx rgba(238,68,68,0.3);
+}
+
+/* ===== 加料编辑器 ===== */
+.goods-specs-row {
+    display: flex;
+    align-items: center;
+    gap: 12rpx;
+    margin-top: 10rpx;
+    flex-wrap: wrap;
+}
+
+.op-spec {
+    font-size: 20rpx;
+    color: #4A7C59;
+    background: rgba(74,124,89,0.08);
+    padding: 4rpx 14rpx;
+    border-radius: 8rpx;
+    font-weight: 600;
+    flex-shrink: 0;
+}
+
+.op-spec:active {
+    background: rgba(74,124,89,0.15);
+}
+
+.form-label-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12rpx;
+}
+
+.spec-add-btn {
+    font-size: 24rpx;
+    color: #4A7C59;
+    font-weight: 600;
+    padding: 6rpx 16rpx;
+    background: rgba(74,124,89,0.08);
+    border-radius: 8rpx;
+}
+
+.spec-add-btn:active {
+    background: rgba(74,124,89,0.15);
+}
+
+.spec-edit-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16rpx;
+}
+
+.spec-edit-row {
+    display: flex;
+    align-items: center;
+    gap: 12rpx;
+    background: #F7F7F7;
+    padding: 16rpx 20rpx;
+    border-radius: 12rpx;
+}
+
+.spec-name-input {
+    flex: 2;
+    height: 64rpx;
+    background: #fff;
+    border-radius: 10rpx;
+    padding: 0 16rpx;
+    font-size: 26rpx;
+    color: #333;
+    border: 2rpx solid #EEE;
+}
+
+.spec-name-input:focus {
+    border-color: #4A7C59;
+}
+
+.spec-price-input {
+    flex: 1;
+    height: 64rpx;
+    background: #fff;
+    border-radius: 10rpx;
+    padding: 0 16rpx;
+    font-size: 26rpx;
+    color: #333;
+    text-align: center;
+    border: 2rpx solid #EEE;
+}
+
+.spec-price-input:focus {
+    border-color: #4A7C59;
+}
+
+.spec-price-unit {
+    font-size: 24rpx;
+    color: #999;
+    flex-shrink: 0;
+}
+
+.spec-remove-btn {
+    width: 48rpx;
+    height: 48rpx;
+    background: #FFF0F0;
+    color: #EE4444;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24rpx;
+    flex-shrink: 0;
+}
+
+.spec-remove-btn:active {
+    background: #FFE0E0;
+}
+
+.spec-empty {
+    padding: 24rpx;
+    text-align: center;
+    color: #CCC;
+    font-size: 24rpx;
+    background: #FAFAFA;
+    border-radius: 12rpx;
+}
+
+.spec-add-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8rpx;
+    padding: 24rpx;
+    color: #4A7C59;
+    font-size: 28rpx;
+    font-weight: 600;
+    border: 2rpx dashed rgba(74,124,89,0.3);
+    border-radius: 12rpx;
+    margin-top: 20rpx;
+}
+
+.spec-add-row:active {
+    background: rgba(74,124,89,0.05);
+}
+
+.spec-add-icon {
+    font-size: 36rpx;
+}
