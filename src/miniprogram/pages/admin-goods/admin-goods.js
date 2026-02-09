@@ -57,6 +57,28 @@ Page({
         });
     },
 
+    // 调用云函数更新商品
+    _updateGoods: function (goodsId, updateData, successMsg) {
+        wx.showLoading({ title: '更新中...' });
+        wx.cloud.callFunction({
+            name: 'updateGoods',
+            data: { goodsId, updateData }
+        }).then(res => {
+            wx.hideLoading();
+            if (res.result && res.result.success) {
+                wx.showToast({ title: successMsg, icon: 'success' });
+                this.loadGoods();
+            } else {
+                console.error('更新失败:', res.result);
+                wx.showToast({ title: res.result.message || '操作失败', icon: 'none' });
+            }
+        }).catch(err => {
+            wx.hideLoading();
+            console.error('云函数调用失败:', err);
+            wx.showToast({ title: '操作失败', icon: 'none' });
+        });
+    },
+
     // 上架/下架
     onToggleSale: function (e) {
         const id = e.currentTarget.dataset.id;
@@ -64,26 +86,13 @@ Page({
         if (!goods) return;
 
         const newOnSale = !goods.onSale;
-        wx.showLoading({ title: '更新中...' });
-        db.collection('goods').doc(goods._id).update({
-            data: { onSale: newOnSale }
-        }).then(() => {
-            wx.hideLoading();
-            wx.showToast({ title: newOnSale ? '已上架' : '已下架', icon: 'success' });
-            this.loadGoods();
-        }).catch(err => {
-            wx.hideLoading();
-            console.error('更新失败:', err);
-            wx.showToast({ title: '操作失败', icon: 'none' });
-        });
+        this._updateGoods(id, { onSale: newOnSale }, newOnSale ? '已上架' : '已下架');
     },
 
     // 修改价格
     onEditPrice: function (e) {
         const id = e.currentTarget.dataset.id;
         const currentPrice = e.currentTarget.dataset.price;
-        const goods = this.data.allGoods.find(g => g.id === id);
-        if (!goods) return;
 
         wx.showModal({
             title: '修改价格',
@@ -96,19 +105,7 @@ Page({
                         wx.showToast({ title: '请输入有效价格', icon: 'none' });
                         return;
                     }
-
-                    wx.showLoading({ title: '更新中...' });
-                    db.collection('goods').doc(goods._id).update({
-                        data: { price: newPrice }
-                    }).then(() => {
-                        wx.hideLoading();
-                        wx.showToast({ title: '价格已更新', icon: 'success' });
-                        this.loadGoods();
-                    }).catch(err => {
-                        wx.hideLoading();
-                        console.error('改价失败:', err);
-                        wx.showToast({ title: '操作失败', icon: 'none' });
-                    });
+                    this._updateGoods(id, { price: newPrice }, '价格已更新');
                 }
             }
         });
