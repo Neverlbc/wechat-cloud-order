@@ -116,6 +116,38 @@ Page({
         this.setData({ 'newGoods.catId': this.data.categories[idx].id });
     },
 
+    // ========== 修改菜品图片 ==========
+    onChangeImage: function (e) {
+        const id = e.currentTarget.dataset.id;
+        wx.chooseMedia({
+            count: 1,
+            mediaType: ['image'],
+            sourceType: ['album', 'camera'],
+            success: (res) => {
+                const filePath = res.tempFiles[0].tempFilePath;
+                wx.showLoading({ title: '上传中...' });
+                this._uploadImage(filePath).then(uploadRes => {
+                    return this._callUpdateGoods({
+                        goodsId: id,
+                        updateData: { image: uploadRes.fileID }
+                    });
+                }).then(res => {
+                    wx.hideLoading();
+                    if (res.result && res.result.success) {
+                        wx.showToast({ title: '图片已更新', icon: 'success' });
+                        this.loadGoods();
+                    } else {
+                        wx.showToast({ title: '更新失败', icon: 'none' });
+                    }
+                }).catch(err => {
+                    wx.hideLoading();
+                    console.error('图片更新失败:', err);
+                    wx.showToast({ title: '操作失败', icon: 'none' });
+                });
+            }
+        });
+    },
+
     // ========== 新增表单 - 加料管理 ==========
     onAddNewSpec: function () {
         const specs = this.data.newSpecs;
