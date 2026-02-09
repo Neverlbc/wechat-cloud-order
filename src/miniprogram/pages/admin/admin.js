@@ -125,10 +125,10 @@ Page({
     },
 
     goSalesStats: function () {
-        wx.showToast({ title: '开发中...', icon: 'none' });
+        wx.navigateTo({ url: '/pages/admin-stats/admin-stats' });
     },
 
     goSettings: function () {
-        wx.showToast({ title: '开发中...', icon: 'none' });
+        wx.navigateTo({ url: '/pages/admin-settings/admin-settings' });
     }
 });

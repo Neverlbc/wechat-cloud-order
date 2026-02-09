@@ -1,0 +1,288 @@
+/* pages/admin-stats/admin-stats.wxss */
+
+page {
+    background: #F2F4F7;
+}
+
+.stats-page {
+    padding-bottom: 40rpx;
+}
+
+/* 时间筛选 */
+.time-tabs {
+    display: flex;
+    background: #fff;
+    padding: 20rpx 24rpx;
+    gap: 16rpx;
+    box-shadow: 0 2rpx 10rpx rgba(0,0,0,0.04);
+}
+
+.time-tab {
+    flex: 1;
+    text-align: center;
+    padding: 16rpx 0;
+    border-radius: 12rpx;
+    font-size: 28rpx;
+    color: #888;
+    background: #F5F5F5;
+    font-weight: 500;
+    transition: all 0.3s;
+}
+
+.time-tab.active {
+    background: linear-gradient(135deg, #5D9B6E, #4A7C59);
+    color: #fff;
+    font-weight: 700;
+    box-shadow: 0 4rpx 12rpx rgba(74,124,89,0.3);
+}
+
+/* 核心指标卡片 */
+.summary-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16rpx;
+    padding: 24rpx;
+}
+
+.summary-card {
+    background: #fff;
+    border-radius: 20rpx;
+    padding: 28rpx 24rpx;
+    text-align: center;
+    box-shadow: 0 2rpx 12rpx rgba(0,0,0,0.04);
+}
+
+.summary-card.highlight {
+    background: linear-gradient(135deg, #5D9B6E, #4A7C59);
+}
+
+.summary-card.highlight .summary-value,
+.summary-card.highlight .summary-label {
+    color: #fff;
+}
+
+.summary-value {
+    display: block;
+    font-size: 44rpx;
+    font-weight: 800;
+    color: #222;
+    margin-bottom: 8rpx;
+}
+
+.summary-label {
+    display: block;
+    font-size: 24rpx;
+    color: #999;
+    font-weight: 500;
+}
+
+/* 区块 */
+.section {
+    margin: 24rpx;
+    background: #fff;
+    border-radius: 20rpx;
+    padding: 28rpx;
+    box-shadow: 0 2rpx 12rpx rgba(0,0,0,0.04);
+}
+
+.section-header {
+    margin-bottom: 24rpx;
+}
+
+.section-title {
+    font-size: 30rpx;
+    font-weight: 700;
+    color: #222;
+}
+
+/* 柱状图 */
+.chart-area {
+    padding: 10rpx 0;
+}
+
+.bar-chart {
+    display: flex;
+    align-items: flex-end;
+    height: 300rpx;
+    gap: 8rpx;
+}
+
+.bar-col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+    justify-content: flex-end;
+}
+
+.bar-value {
+    font-size: 18rpx;
+    color: #4A7C59;
+    font-weight: 600;
+    margin-bottom: 6rpx;
+    white-space: nowrap;
+}
+
+.bar-fill {
+    width: 100%;
+    max-width: 60rpx;
+    background: linear-gradient(180deg, #5D9B6E, #4A7C59);
+    border-radius: 8rpx 8rpx 0 0;
+    min-height: 6rpx;
+    transition: height 0.5s;
+}
+
+.bar-label {
+    font-size: 18rpx;
+    color: #BBB;
+    margin-top: 8rpx;
+    white-space: nowrap;
+}
+
+/* 热销排行 */
+.hot-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20rpx;
+}
+
+.hot-item {
+    display: flex;
+    align-items: center;
+    gap: 16rpx;
+}
+
+.hot-rank {
+    width: 48rpx;
+    height: 48rpx;
+    border-radius: 12rpx;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24rpx;
+    font-weight: 800;
+    flex-shrink: 0;
+    background: #F5F5F5;
+    color: #999;
+}
+
+.hot-rank.rank-1 {
+    background: linear-gradient(135deg, #FFD700, #FFA500);
+    color: #fff;
+}
+
+.hot-rank.rank-2 {
+    background: linear-gradient(135deg, #C0C0C0, #A0A0A0);
+    color: #fff;
+}
+
+.hot-rank.rank-3 {
+    background: linear-gradient(135deg, #CD7F32, #B8660E);
+    color: #fff;
+}
+
+.hot-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.hot-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8rpx;
+}
+
+.hot-name {
+    font-size: 28rpx;
+    font-weight: 600;
+    color: #333;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.hot-count {
+    font-size: 24rpx;
+    color: #999;
+    flex-shrink: 0;
+    margin-left: 12rpx;
+}
+
+.hot-bar-bg {
+    height: 12rpx;
+    background: #F0F0F0;
+    border-radius: 6rpx;
+    overflow: hidden;
+}
+
+.hot-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #5D9B6E, #8BC34A);
+    border-radius: 6rpx;
+    transition: width 0.5s;
+}
+
+.hot-revenue {
+    font-size: 28rpx;
+    font-weight: 700;
+    color: #EE4444;
+    flex-shrink: 0;
+    min-width: 100rpx;
+    text-align: right;
+}
+
+/* 订单状态分布 */
+.status-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16rpx;
+}
+
+.status-item {
+    text-align: center;
+    padding: 20rpx 0;
+    background: #FAFAFA;
+    border-radius: 12rpx;
+}
+
+.status-count {
+    display: block;
+    font-size: 36rpx;
+    font-weight: 800;
+    color: #4A7C59;
+}
+
+.status-name {
+    display: block;
+    font-size: 22rpx;
+    color: #888;
+    margin-top: 6rpx;
+}
+
+.status-percent {
+    display: block;
+    font-size: 20rpx;
+    color: #BBB;
+    margin-top: 4rpx;
+}
+
+/* 空状态 */
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 120rpx 0;
+}
+
+.empty-icon {
+    font-size: 80rpx;
+    margin-bottom: 20rpx;
+}
+
+.empty-text {
+    font-size: 28rpx;
+    color: #CCC;
+}

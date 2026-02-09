@@ -1,9 +1,12 @@
 // pages/admin-goods/admin-goods.js
-// 一味鲜 - 菜品管理
+// 一味鲜 - 菜品管理（云数据库版）
+const db = wx.cloud.database()
+
 Page({
     data: {
         currentCat: 0,
         categories: [],
+        allGoods: [],
         displayGoods: []
     },
 
@@ -12,60 +15,66 @@ Page({
     },
 
     loadGoods: function () {
-        // 从首页获取菜品数据（共享同一份数据源）
-        const pages = getCurrentPages();
-        const indexPage = pages.find(p => p.route === 'pages/index/index');
-        
-        if (indexPage) {
-            const categories = JSON.parse(JSON.stringify(indexPage.data.categories));
-            this.setData({
-                categories,
-                displayGoods: categories[this.data.currentCat].goods
-            });
-        } else {
-            // 如果首页不在栈中，从缓存读
-            const cached = wx.getStorageSync('adminGoods');
-            if (cached) {
-                this.setData({
-                    categories: cached,
-                    displayGoods: cached[this.data.currentCat].goods
-                });
-            }
-        }
+        wx.showLoading({ title: '加载中...' });
+        Promise.all([
+            db.collection('categories').orderBy('sort', 'asc').get(),
+            db.collection('goods').orderBy('sort', 'asc').get()
+        ]).then(([catRes, goodsRes]) => {
+            wx.hideLoading();
+            const categories = catRes.data.map(c => ({
+                id: c.catId,
+                name: c.name
+            }));
+            const allGoods = goodsRes.data.map(g => ({
+                _id: g._id,
+                id: g.goodsId,
+                catId: g.catId,
+                name: g.name,
+                desc: g.desc,
+                price: g.price,
+                image: g.image,
+                hasSpecs: g.hasSpecs || false,
+                specs: g.specs || [],
+                onSale: g.onSale !== false
+            }));
+
+            const displayGoods = allGoods.filter(g => g.catId === categories[this.data.currentCat].id);
+
+            this.setData({ categories, allGoods, displayGoods });
+        }).catch(err => {
+            wx.hideLoading();
+            console.error('加载菜品失败:', err);
+            wx.showToast({ title: '加载失败', icon: 'none' });
+        });
     },
 
     onCatChange: function (e) {
         const index = e.currentTarget.dataset.index;
+        const catId = this.data.categories[index].id;
         this.setData({
             currentCat: index,
-            displayGoods: this.data.categories[index].goods
+            displayGoods: this.data.allGoods.filter(g => g.catId === catId)
         });
     },
 
     // 上架/下架
     onToggleSale: function (e) {
         const id = e.currentTarget.dataset.id;
-        const categories = this.data.categories;
+        const goods = this.data.allGoods.find(g => g.id === id);
+        if (!goods) return;
 
-        for (let cat of categories) {
-            const goods = cat.goods.find(g => g.id === id);
-            if (goods) {
-                goods.isOnsale = goods.isOnsale === false ? true : false;
-                break;
-            }
-        }
-
-        this.setData({
-            categories,
-            displayGoods: categories[this.data.currentCat].goods
-        });
-
-        // 同步回首页
-        this.syncToIndex(categories);
-
-        wx.showToast({
-            title: '已更新',
-            icon: 'success'
+        const newOnSale = !goods.onSale;
+        wx.showLoading({ title: '更新中...' });
+        db.collection('goods').doc(goods._id).update({
+            data: { onSale: newOnSale }
+        }).then(() => {
+            wx.hideLoading();
+            wx.showToast({ title: newOnSale ? '已上架' : '已下架', icon: 'success' });
+            this.loadGoods();
+        }).catch(err => {
+            wx.hideLoading();
+            console.error('更新失败:', err);
+            wx.showToast({ title: '操作失败', icon: 'none' });
         });
     },
 
@@ -73,12 +82,13 @@ Page({
     onEditPrice: function (e) {
         const id = e.currentTarget.dataset.id;
         const currentPrice = e.currentTarget.dataset.price;
+        const goods = this.data.allGoods.find(g => g.id === id);
+        if (!goods) return;
 
         wx.showModal({
             title: '修改价格',
-            content: '当前价格：¥' + currentPrice,
             editable: true,
-            placeholderText: '输入新价格',
+            placeholderText: '当前 ¥' + currentPrice + '，输入新价格',
             success: (res) => {
                 if (res.confirm && res.content) {
                     const newPrice = parseFloat(res.content);
@@ -87,48 +97,20 @@ Page({
                         return;
                     }
 
-                    const categories = this.data.categories;
-                    for (let cat of categories) {
-                        const goods = cat.goods.find(g => g.id === id);
-                        if (goods) {
-                            goods.price = newPrice;
-                            break;
-                        }
-                    }
-
-                    this.setData({
-                        categories,
-                        displayGoods: categories[this.data.currentCat].goods
+                    wx.showLoading({ title: '更新中...' });
+                    db.collection('goods').doc(goods._id).update({
+                        data: { price: newPrice }
+                    }).then(() => {
+                        wx.hideLoading();
+                        wx.showToast({ title: '价格已更新', icon: 'success' });
+                        this.loadGoods();
+                    }).catch(err => {
+                        wx.hideLoading();
+                        console.error('改价失败:', err);
+                        wx.showToast({ title: '操作失败', icon: 'none' });
                     });
-
-                    this.syncToIndex(categories);
-
-                    wx.showToast({ title: '价格已更新', icon: 'success' });
                 }
             }
         });
-    },
-
-    // 同步数据回首页
-    syncToIndex: function (categories) {
-        const pages = getCurrentPages();
-        const indexPage = pages.find(p => p.route === 'pages/index/index');
-        if (indexPage) {
-            // 保留首页购物车数据，只更新菜品信息
-            const indexCats = indexPage.data.categories;
-            for (let i = 0; i < categories.length; i++) {
-                for (let j = 0; j < categories[i].goods.length; j++) {
-                    const adminGoods = categories[i].goods[j];
-                    const indexGoods = indexCats[i].goods[j];
-                    if (indexGoods) {
-                        indexGoods.price = adminGoods.price;
-                        indexGoods.isOnsale = adminGoods.isOnsale;
-                    }
-                }
-            }
-            indexPage.setData({ categories: indexCats });
-        }
-        // 同时缓存一份
-        wx.setStorageSync('adminGoods', categories);
     }
 });

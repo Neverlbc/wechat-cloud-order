@@ -1,0 +1,94 @@
+<!--pages/admin-stats/admin-stats.wxml-->
+<view class="stats-page">
+
+  <!-- 时间筛选 -->
+  <view class="time-tabs">
+    <view 
+      class="time-tab {{currentTab === idx ? 'active' : ''}}"
+      wx:for="{{tabs}}"
+      wx:key="*this"
+      wx:for-index="idx"
+      bindtap="onTabChange"
+      data-index="{{idx}}"
+    >{{item}}</view>
+  </view>
+
+  <!-- 核心指标 -->
+  <view class="summary-cards">
+    <view class="summary-card">
+      <text class="summary-value">{{summary.totalOrders}}</text>
+      <text class="summary-label">订单数</text>
+    </view>
+    <view class="summary-card highlight">
+      <text class="summary-value">¥{{summary.totalRevenue}}</text>
+      <text class="summary-label">营收</text>
+    </view>
+    <view class="summary-card">
+      <text class="summary-value">¥{{summary.avgOrderAmount}}</text>
+      <text class="summary-label">客单价</text>
+    </view>
+    <view class="summary-card">
+      <text class="summary-value">{{summary.completedOrders}}</text>
+      <text class="summary-label">已完成</text>
+    </view>
+  </view>
+
+  <!-- 每日趋势（非"今日"时显示） -->
+  <view class="section" wx:if="{{dailyStats.length > 0}}">
+    <view class="section-header">
+      <text class="section-title">📈 每日营收</text>
+    </view>
+    <view class="chart-area">
+      <view class="bar-chart">
+        <view class="bar-col" wx:for="{{dailyStats}}" wx:key="date">
+          <text class="bar-value">{{item.revenue > 0 ? '¥' + item.revenue : ''}}</text>
+          <view class="bar-fill" style="height: {{item.barHeight}}%"></view>
+          <text class="bar-label">{{item.date}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 热销排行 -->
+  <view class="section" wx:if="{{hotGoods.length > 0}}">
+    <view class="section-header">
+      <text class="section-title">🔥 热销排行</text>
+    </view>
+    <view class="hot-list">
+      <view class="hot-item" wx:for="{{hotGoods}}" wx:key="name">
+        <view class="hot-rank rank-{{item.rank <= 3 ? item.rank : 'other'}}">{{item.rank}}</view>
+        <view class="hot-info">
+          <view class="hot-top">
+            <text class="hot-name">{{item.name}}</text>
+            <text class="hot-count">{{item.count}}份</text>
+          </view>
+          <view class="hot-bar-bg">
+            <view class="hot-bar-fill" style="width: {{item.barWidth}}%"></view>
+          </view>
+        </view>
+        <text class="hot-revenue">¥{{item.revenue}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 订单状态分布 -->
+  <view class="section" wx:if="{{statusDistribution.length > 0}}">
+    <view class="section-header">
+      <text class="section-title">📊 订单状态</text>
+    </view>
+    <view class="status-grid">
+      <view class="status-item" wx:for="{{statusDistribution}}" wx:key="name">
+        <text class="status-count">{{item.count}}</text>
+        <text class="status-name">{{item.name}}</text>
+        <text class="status-percent">{{item.percent}}%</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty-state" wx:if="{{hotGoods.length === 0 && summary.totalOrders === 0}}">
+    <text class="empty-icon">📊</text>
+    <text class="empty-text">暂无销售数据</text>
+  </view>
+
+</view>

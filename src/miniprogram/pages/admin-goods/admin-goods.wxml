@@ -21,8 +21,8 @@
         <view class="goods-body">
           <view class="goods-top">
             <text class="goods-name">{{item.name}}</text>
-            <view class="sale-tag {{item.isOnsale !== false ? 'on' : 'off'}}">
-              {{item.isOnsale !== false ? '在售' : '下架'}}
+            <view class="sale-tag {{item.onSale ? 'on' : 'off'}}">
+              {{item.onSale ? '在售' : '已下架'}}
             </view>
           </view>
           <text class="goods-desc">{{item.desc}}</text>
@@ -38,7 +38,7 @@
             </view>
             <view class="goods-ops">
               <view class="op-toggle" catchtap="onToggleSale" data-id="{{item.id}}">
-                {{item.isOnsale !== false ? '下架' : '上架'}}
+                {{item.onSale ? '下架' : '上架'}}
               </view>
               <view class="op-edit" catchtap="onEditPrice" data-id="{{item.id}}" data-price="{{item.price}}">
                 改价
