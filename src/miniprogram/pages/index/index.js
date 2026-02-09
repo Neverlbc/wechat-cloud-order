@@ -17,6 +17,14 @@ Page({
         this.loadGoodsFromCloud();
     },
 
+    // 页面显示时检查是否有待恢复的购物车（用于 switchTab 跳转）
+    onShow: function () {
+        // 如果商品已加载完成，检查并恢复购物车
+        if (this.data.categories.length > 0 && !this.data.loading) {
+            this.restoreCartFromCache();
+        }
+    },
+
     // 从云数据库加载商品数据
     loadGoodsFromCloud: function () {
         this.setData({ loading: true });
@@ -48,6 +56,9 @@ Page({
 
             this.setData({ categories, loading: false });
             console.log('[loadGoods] 云端加载成功，分类:', categories.length, '商品:', goodsRes.data.length);
+
+            // 🔄 检查是否有"再来一单"的购物车数据需要恢复
+            this.restoreCartFromCache();
         }).catch(err => {
             console.error('[loadGoods] 云端加载失败，使用本地备份', err);
             this.loadLocalFallback();
@@ -90,6 +101,70 @@ Page({
             }
         ];
         this.setData({ categories, loading: false });
+    },
+
+    // 🔄 从缓存恢复购物车数据（用于"再来一单"）
+    restoreCartFromCache: function () {
+        const cachedItems = wx.getStorageSync('cartItems');
+        const cachedTotal = wx.getStorageSync('cartTotal');
+
+        // 如果没有缓存数据，直接返回
+        if (!cachedItems || cachedItems.length === 0) {
+            return;
+        }
+
+        console.log('[restoreCart] 发现缓存购物车数据:', cachedItems);
+
+        const categories = this.data.categories;
+        let cartTotal = 0;
+        let cartCount = 0;
+        let restoredCount = 0;
+
+        // 遍历缓存的商品，恢复到当前商品列表中
+        cachedItems.forEach(cachedItem => {
+            for (let catIndex = 0; catIndex < categories.length; catIndex++) {
+                const goods = categories[catIndex].goods;
+                for (let goodsIndex = 0; goodsIndex < goods.length; goodsIndex++) {
+                    const g = goods[goodsIndex];
+                    // 通过商品ID或名称匹配
+                    if (g.id === cachedItem.id || g.name === cachedItem.name) {
+                        g.quantity = cachedItem.quantity || 1;
+                        g.selectedSpecs = cachedItem.selectedSpecs || [];
+                        g.specDesc = cachedItem.specDesc || '';
+                        g.extraFee = cachedItem.extraFee || 0;
+                        restoredCount++;
+                        break;
+                    }
+                }
+            }
+        });
+
+        // 重新计算购物车总额
+        categories.forEach(cat => {
+            cat.goods.forEach(g => {
+                const extra = (g.extraFee || 0) * g.quantity;
+                cartTotal += g.price * g.quantity + extra;
+                cartCount += g.quantity;
+            });
+        });
+
+        this.setData({ categories, cartTotal, cartCount });
+
+        // 清除缓存（已恢复完毕）
+        wx.removeStorageSync('cartItems');
+        wx.removeStorageSync('cartTotal');
+
+        // 如果有商品，隐藏TabBar
+        if (cartCount > 0) {
+            wx.hideTabBar({ animation: true });
+            wx.showToast({
+                title: `已恢复${restoredCount}件商品`,
+                icon: 'success',
+                duration: 1500
+            });
+        }
+
+        console.log('[restoreCart] 恢复完成，共', restoredCount, '件商品');
     },
 
     // 点击商品进入详情页

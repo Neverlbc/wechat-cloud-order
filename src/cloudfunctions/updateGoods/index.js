@@ -14,9 +14,10 @@ exports.main = async (event) => {
     }
 
     try {
-      // 生成唯一 goodsId
-      const countRes = await db.collection('goods').count()
-      const newGoodsId = 'g' + String(countRes.total + 1).padStart(3, '0')
+      // 生成唯一 goodsId（使用时间戳 + 随机字符串，确保绝对唯一）
+      const timestamp = Date.now().toString(36)
+      const randomStr = Math.random().toString(36).substr(2, 6)
+      const newGoodsId = 'g' + timestamp + randomStr
 
       const newGoods = {
         goodsId: newGoodsId,
@@ -28,7 +29,7 @@ exports.main = async (event) => {
         hasSpecs: goodsData.hasSpecs || false,
         specs: goodsData.specs || [],
         onSale: true,
-        sort: countRes.total + 1
+        sort: Date.now()
       }
 
       const addRes = await db.collection('goods').add({ data: newGoods })

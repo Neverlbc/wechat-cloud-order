@@ -116,38 +116,6 @@ Page({
         this.setData({ 'newGoods.catId': this.data.categories[idx].id });
     },
 
-    // ========== 修改菜品图片 ==========
-    onChangeImage: function (e) {
-        const id = e.currentTarget.dataset.id;
-        wx.chooseMedia({
-            count: 1,
-            mediaType: ['image'],
-            sourceType: ['album', 'camera'],
-            success: (res) => {
-                const filePath = res.tempFiles[0].tempFilePath;
-                wx.showLoading({ title: '上传中...' });
-                this._uploadImage(filePath).then(uploadRes => {
-                    return this._callUpdateGoods({
-                        goodsId: id,
-                        updateData: { image: uploadRes.fileID }
-                    });
-                }).then(res => {
-                    wx.hideLoading();
-                    if (res.result && res.result.success) {
-                        wx.showToast({ title: '图片已更新', icon: 'success' });
-                        this.loadGoods();
-                    } else {
-                        wx.showToast({ title: '更新失败', icon: 'none' });
-                    }
-                }).catch(err => {
-                    wx.hideLoading();
-                    console.error('图片更新失败:', err);
-                    wx.showToast({ title: '操作失败', icon: 'none' });
-                });
-            }
-        });
-    },
-
     // ========== 新增表单 - 加料管理 ==========
     onAddNewSpec: function () {
         const specs = this.data.newSpecs;
@@ -419,6 +387,50 @@ Page({
                         wx.showToast({ title: '操作失败', icon: 'none' });
                     });
                 }
+            }
+        });
+    },
+
+    // ========== 更换图片 ==========
+    onChangeImage: function (e) {
+        const goodsId = e.currentTarget.dataset.id;
+        const goodsName = e.currentTarget.dataset.name || '菜品';
+
+        if (!goodsId) {
+            wx.showToast({ title: '商品ID无效', icon: 'none' });
+            return;
+        }
+
+        wx.chooseMedia({
+            count: 1,
+            mediaType: ['image'],
+            sourceType: ['album', 'camera'],
+            success: (res) => {
+                const tempFilePath = res.tempFiles[0].tempFilePath;
+                wx.showLoading({ title: '上传中...' });
+
+                // 上传新图片到云存储
+                this._uploadImage(tempFilePath).then(uploadRes => {
+                    const newImageUrl = uploadRes.fileID;
+
+                    // 使用云函数更新指定商品的图片
+                    return this._callUpdateGoods({
+                        goodsId: goodsId,
+                        updateData: { image: newImageUrl }
+                    });
+                }).then(updateRes => {
+                    wx.hideLoading();
+                    if (updateRes.result && updateRes.result.success) {
+                        wx.showToast({ title: '图片已更新', icon: 'success' });
+                        this.loadGoods(); // 重新加载商品列表
+                    } else {
+                        wx.showToast({ title: updateRes.result?.message || '更新失败', icon: 'none' });
+                    }
+                }).catch(err => {
+                    wx.hideLoading();
+                    console.error('更换图片失败:', err);
+                    wx.showToast({ title: '操作失败，请重试', icon: 'none' });
+                });
             }
         });
     },

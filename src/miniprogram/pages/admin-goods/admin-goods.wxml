@@ -17,9 +17,9 @@
   <scroll-view class="goods-scroll" scroll-y enhanced show-scrollbar="{{false}}">
     <view class="goods-list">
       <view class="goods-card" wx:for="{{displayGoods}}" wx:key="id">
-        <view class="thumb-wrapper">
-          <image class="goods-thumb" src="{{item.image}}" mode="aspectFill" lazy-load catchtap="onChangeImage" data-id="{{item.id}}"></image>
-          <view class="thumb-edit-hint">换图</view>
+        <view class="goods-thumb-wrapper">
+          <image class="goods-thumb" src="{{item.image}}" mode="aspectFill" lazy-load></image>
+          <view class="change-image-btn" catchtap="onChangeImage" data-id="{{item.id}}" data-name="{{item.name}}">换图</view>
         </view>
         <view class="goods-body">
           <view class="goods-top">

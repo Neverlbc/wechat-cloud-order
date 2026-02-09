@@ -1,0 +1,9 @@
+{
+    "name": "fixGoodsIds",
+    "version": "1.0.0",
+    "description": "修复重复的商品ID",
+    "main": "index.js",
+    "dependencies": {
+        "wx-server-sdk": "~2.6.3"
+    }
+}
