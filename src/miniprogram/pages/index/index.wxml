@@ -87,7 +87,7 @@
               <view class="goods-actions">
                 <view class="add-cart-btn" wx:if="{{goods.quantity === 0}}" catchtap="onPlus" data-goods="{{goods}}">
                   <text class="add-cart-icon">🛒</text>
-                  <text>加入购物</text>
+                  <text>加入购物车</text>
                 </view>
                 <view class="quantity-control" wx:else>
                   <view class="action-btn minus" catchtap="onMinus" data-goods="{{goods}}">-</view>

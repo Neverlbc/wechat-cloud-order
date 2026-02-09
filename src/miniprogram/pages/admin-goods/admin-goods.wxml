@@ -20,7 +20,7 @@
         <image class="goods-thumb" src="{{item.image}}" mode="aspectFill" lazy-load></image>
         <view class="goods-body">
           <view class="goods-top">
-            <text class="goods-name">{{item.name}}</text>
+            <text class="goods-name" catchtap="onEditName" data-id="{{item.id}}" data-name="{{item.name}}">{{item.name}}</text>
             <view class="sale-tag {{item.onSale ? 'on' : 'off'}}">
               {{item.onSale ? '在售' : '已下架'}}
             </view>
@@ -37,6 +37,9 @@
               <text class="price-val">{{item.price}}</text>
             </view>
             <view class="goods-ops">
+              <view class="op-delete" catchtap="onDeleteGoods" data-id="{{item.id}}" data-name="{{item.name}}">
+                删除
+              </view>
               <view class="op-toggle" catchtap="onToggleSale" data-id="{{item.id}}">
                 {{item.onSale ? '下架' : '上架'}}
               </view>
@@ -47,7 +50,64 @@
           </view>
         </view>
       </view>
+
+      <!-- 空状态 -->
+      <view class="empty-hint" wx:if="{{displayGoods.length === 0}}">
+        <text>当前分类暂无菜品</text>
+      </view>
     </view>
   </scroll-view>
+
+  <!-- 底部新增按钮 -->
+  <view class="add-bar" bindtap="onShowAddForm">
+    <text class="add-icon">+</text>
+    <text>新增菜品</text>
+  </view>
+
+  <!-- 新增菜品弹窗 -->
+  <view class="form-mask {{showAddForm ? 'show' : ''}}" bindtap="onHideAddForm"></view>
+  <view class="form-popup {{showAddForm ? 'show' : ''}}">
+    <view class="form-header">
+      <text class="form-title">新增菜品</text>
+      <view class="form-close" bindtap="onHideAddForm">✕</view>
+    </view>
+
+    <view class="form-body">
+      <view class="form-item">
+        <text class="form-label">菜品名称</text>
+        <input class="form-input" placeholder="例如：番茄牛腩粉" value="{{newGoods.name}}" bindinput="onNewNameInput" />
+      </view>
+
+      <view class="form-item">
+        <text class="form-label">描述</text>
+        <input class="form-input" placeholder="一句话描述菜品特色" value="{{newGoods.desc}}" bindinput="onNewDescInput" />
+      </view>
+
+      <view class="form-item">
+        <text class="form-label">价格（元）</text>
+        <input class="form-input" type="digit" placeholder="例如：12" value="{{newGoods.price}}" bindinput="onNewPriceInput" />
+      </view>
+
+      <view class="form-item">
+        <text class="form-label">所属分类</text>
+        <picker mode="selector" range="{{categories}}" range-key="name" bindchange="onNewCatChange">
+          <view class="form-picker">
+            <text wx:if="{{newGoods.catId}}">
+              <block wx:for="{{categories}}" wx:key="id">
+                <block wx:if="{{item.id === newGoods.catId}}">{{item.name}}</block>
+              </block>
+            </text>
+            <text wx:else class="form-placeholder">请选择分类</text>
+            <text class="picker-arrow">▼</text>
+          </view>
+        </picker>
+      </view>
+    </view>
+
+    <view class="form-footer">
+      <view class="form-btn cancel" bindtap="onHideAddForm">取消</view>
+      <view class="form-btn confirm" bindtap="onSubmitAdd">确认新增</view>
+    </view>
+  </view>
 
 </view>

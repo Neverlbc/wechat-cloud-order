@@ -47,6 +47,7 @@ page {
 
 .goods-list {
     padding: 20rpx 24rpx;
+    padding-bottom: 140rpx;
 }
 
 /* 商品卡片 */
@@ -89,6 +90,9 @@ page {
     white-space: nowrap;
     flex: 1;
     margin-right: 12rpx;
+    text-decoration: underline;
+    text-decoration-color: rgba(74,124,89,0.3);
+    text-underline-offset: 4rpx;
 }
 
 .sale-tag {
@@ -160,20 +164,22 @@ page {
 
 .goods-ops {
     display: flex;
-    gap: 12rpx;
+    gap: 10rpx;
 }
 
 .op-toggle,
-.op-edit {
-    padding: 10rpx 24rpx;
+.op-edit,
+.op-delete {
+    padding: 8rpx 20rpx;
     border-radius: 10rpx;
-    font-size: 24rpx;
+    font-size: 22rpx;
     font-weight: 600;
     transition: all 0.2s;
 }
 
 .op-toggle:active,
-.op-edit:active {
+.op-edit:active,
+.op-delete:active {
     transform: scale(0.96);
 }
 
@@ -186,4 +192,188 @@ page {
     background: linear-gradient(135deg, #5D9B6E, #4A7C59);
     color: #fff;
     box-shadow: 0 2rpx 8rpx rgba(74,124,89,0.25);
+}
+
+.op-delete {
+    background: #FFF0F0;
+    color: #EE4444;
+}
+
+/* 空状态 */
+.empty-hint {
+    text-align: center;
+    padding: 80rpx 0;
+    color: #CCC;
+    font-size: 28rpx;
+}
+
+/* ===== 底部新增按钮 ===== */
+.add-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100rpx;
+    background: linear-gradient(135deg, #5D9B6E, #4A7C59);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32rpx;
+    font-weight: 700;
+    gap: 10rpx;
+    box-shadow: 0 -4rpx 20rpx rgba(74,124,89,0.2);
+    z-index: 100;
+    padding-bottom: env(safe-area-inset-bottom);
+}
+
+.add-bar:active {
+    opacity: 0.85;
+}
+
+.add-icon {
+    font-size: 42rpx;
+    font-weight: 300;
+}
+
+/* ===== 新增菜品弹窗 ===== */
+.form-mask {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 200;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+}
+
+.form-mask.show {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.form-popup {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #fff;
+    border-radius: 32rpx 32rpx 0 0;
+    z-index: 201;
+    transform: translateY(100%);
+    transition: transform 0.35s cubic-bezier(0.23, 1, 0.32, 1);
+    padding-bottom: env(safe-area-inset-bottom);
+}
+
+.form-popup.show {
+    transform: translateY(0);
+}
+
+.form-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 36rpx 40rpx 20rpx;
+    border-bottom: 1rpx solid #F0F0F0;
+}
+
+.form-title {
+    font-size: 34rpx;
+    font-weight: 700;
+    color: #222;
+}
+
+.form-close {
+    font-size: 36rpx;
+    color: #BBB;
+    padding: 10rpx;
+}
+
+.form-body {
+    padding: 30rpx 40rpx;
+}
+
+.form-item {
+    margin-bottom: 32rpx;
+}
+
+.form-label {
+    font-size: 26rpx;
+    color: #666;
+    font-weight: 600;
+    margin-bottom: 12rpx;
+    display: block;
+}
+
+.form-input {
+    width: 100%;
+    height: 80rpx;
+    background: #F7F7F7;
+    border-radius: 16rpx;
+    padding: 0 24rpx;
+    font-size: 28rpx;
+    color: #333;
+    box-sizing: border-box;
+    border: 2rpx solid transparent;
+    transition: border-color 0.3s;
+}
+
+.form-input:focus {
+    border-color: #4A7C59;
+    background: #FAFFF8;
+}
+
+.form-picker {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 80rpx;
+    background: #F7F7F7;
+    border-radius: 16rpx;
+    padding: 0 24rpx;
+    font-size: 28rpx;
+    color: #333;
+}
+
+.form-placeholder {
+    color: #CCC;
+}
+
+.picker-arrow {
+    font-size: 22rpx;
+    color: #BBB;
+}
+
+.form-footer {
+    display: flex;
+    gap: 20rpx;
+    padding: 20rpx 40rpx 30rpx;
+    border-top: 1rpx solid #F0F0F0;
+}
+
+.form-btn {
+    flex: 1;
+    height: 88rpx;
+    border-radius: 16rpx;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30rpx;
+    font-weight: 700;
+    transition: all 0.2s;
+}
+
+.form-btn:active {
+    transform: scale(0.97);
+}
+
+.form-btn.cancel {
+    background: #F5F5F5;
+    color: #888;
+}
+
+.form-btn.confirm {
+    background: linear-gradient(135deg, #5D9B6E, #4A7C59);
+    color: #fff;
+    box-shadow: 0 4rpx 16rpx rgba(74,124,89,0.3);
 }
